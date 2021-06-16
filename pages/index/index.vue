@@ -154,12 +154,10 @@
 	export default {
 		data() {
 			return {
-				// 后台接口请求获得的数据
 				goods_id:"001",
-				// sku组件开关
 				sku_key:false,
 				form:{
-					skuMode:1,							// 模式 1:都显示  2:只显示购物车 3:只显示立即购买 默认 1
+					skuMode:1,
 					buyNowText:"立即购买",
 					buyNowColor:"#ffffff",
 					buyNowBackgroundColor:"#fe560a",
@@ -225,7 +223,6 @@
 					}
 				});
 			},
-			// 
 			/**
 			 * 获取商品信息
 			 * 这里可以看到每次打开SKU都会去重新请求商品信息,为的是每次打开SKU组件可以实时看到剩余库存
@@ -246,7 +243,6 @@
 				});
 			},
 			callFunction(obj){
-				// callback方式
 				uni.showLoading({
 					title: '请求中'
 				});

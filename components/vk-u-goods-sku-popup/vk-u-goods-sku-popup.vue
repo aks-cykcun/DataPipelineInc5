@@ -36,8 +36,8 @@
 									:key="index2"
 									:class="[item_value.ishow ? '' : 'noactived', subIndex[index1] == index2 ? 'actived' : '']"
 									:style="[item_value.ishow ? '' : disableStyle,
-													subIndex[index1] == index2 ? activedStyle : '',
-													item_value.ishow ? btnStyle :''
+													item_value.ishow ? btnStyle :'',
+													subIndex[index1] == index2 ? activedStyle : ''
 									]"
 									>
 									{{ item_value.name }}

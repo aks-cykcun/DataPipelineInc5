@@ -313,7 +313,7 @@
 			// 使用vk路由模式框架获取商品信息
 			findGoodsInfo(){
 				if(typeof vk == "undefined"){
-					that.toast("未找到vk依赖");
+					that.toast("custom-action必须是function");
 					return false;
 				}
 				vk.callFunction({

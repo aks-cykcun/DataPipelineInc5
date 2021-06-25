@@ -1,7 +1,7 @@
 <template>
 	<view class="app">
 		<button @click="sku_key = true">打开SKU组件</button>
-		<vk-u-goods-sku-popup
+		<vk-data-goods-sku-popup
 			v-model="sku_key" 
 			border-radius="20" 
 			:custom-action="findGoodsInfo"
@@ -16,14 +16,16 @@
 			:min-buy-num="form.minBuyNum"
 			:max-buy-num="form.maxBuyNum"
 			:step-buy-num="form.stepBuyNum"
+			:stepStrictly="form.stepStrictly"
 			:show-close="form.showClose"
 			:mask-close-able="form.maskCloseAble"
 			:price-color="form.priceColor"
+			:hide-stock="form.hideStock"
 			@open="openSkuPopup"
 			@close="closeSkuPopup"
 			@add-cart="addCart"
 			@buy-now="buyNow"
-		></vk-u-goods-sku-popup>
+		></vk-data-goods-sku-popup>
 		<view class="config-wrap">
 			<view class="config-title">
 				参数配置
@@ -119,21 +121,21 @@
 				</view>
 				<view class="form-item">
 					<view class="title">最小购买数量</view>
-					<vk-u-number-box
+					<vk-data-input-number-box
 						v-model="form.minBuyNum" :min="1" :max="10000" :step="1" :positive-integer="true">
-					</vk-u-number-box>
+					</vk-data-input-number-box>
 				</view>
 				<view class="form-item">
 					<view class="title">最大购买数量</view>
-					<vk-u-number-box
+					<vk-data-input-number-box
 						v-model="form.maxBuyNum" :min="1" :max="10000" :step="1" :positive-integer="true">
-					</vk-u-number-box>
+					</vk-data-input-number-box>
 				</view>
 				<view class="form-item">
 					<view class="title">步进器步长</view>
-					<vk-u-number-box
+					<vk-data-input-number-box
 						v-model="form.stepBuyNum" :min="1" :max="10000" :step="1" :positive-integer="true">
-					</vk-u-number-box>
+					</vk-data-input-number-box>
 				</view>
 				<view class="form-item">
 					<view class="title">显示关闭按钮</view>
@@ -142,6 +144,14 @@
 				<view class="form-item">
 					<view class="title">点击遮罩关闭组件</view>
 					<switch checked @change="maskCloseAbleChange" />
+				</view>
+				<view class="form-item">
+					<view class="title">是否只能输入 step 的倍数</view>
+					<switch @change="stepStrictlyChange" />
+				</view>
+				<view class="form-item">
+					<view class="title">是否隐藏库存</view>
+					<switch @change="hideStockChange" />
 				</view>
 		</view>
 		</view>
@@ -168,7 +178,9 @@
 					minBuyNum:1,
 					maxBuyNum:10000,
 					stepBuyNum:1,
-					priceColor:"#fe560a"
+					stepStrictly:false,
+					priceColor:"#fe560a",
+					hideStock:false
 				}
 			}
 		},
@@ -227,9 +239,11 @@
 			 * 获取商品信息
 			 * 这里可以看到每次打开SKU都会去重新请求商品信息,为的是每次打开SKU组件可以实时看到剩余库存
 			 */
-			findGoodsInfo(){
+			findGoodsInfo(obj){
+				let { useCache } = obj;
 				return new Promise(function (resolve, reject) {
 					that.callFunction({
+						useCache:useCache,
 						success(data) {
 							resolve(data.goodsInfo);
 						}
@@ -243,9 +257,12 @@
 				});
 			},
 			callFunction(obj){
-				uni.showLoading({
-					title: '请求中'
-				});
+				let { useCache, success } = obj;
+				if(!useCache) {
+					uni.showLoading({
+						title: '请求中'
+					});
+				}
 				uniCloud.callFunction({
 					name: 'findGoodsInfo',
 					data: { 
@@ -253,13 +270,13 @@
 					},
 					success(res){
 						console.log(res);
-						if(typeof obj.success == "function") obj.success(res.result);
+						if(typeof success == "function") success(res.result);
 					},
 					fail(err){
 						console.error(err);
 					},
 					complete(){
-						uni.hideLoading();
+						if(!useCache) uni.hideLoading();
 					}
 				});
 			},
@@ -279,7 +296,15 @@
 			skuModeChange(e){
 				that.form.skuMode = e.detail.value;
 				that.sku_key = true;
-			}
+			},
+			stepStrictlyChange(e){
+				that.form.stepStrictly = e.detail.value;
+				that.sku_key = true;
+			},
+			hideStockChange(e){
+				that.form.hideStock = e.detail.value;
+				that.sku_key = true;
+			},
 			// 参数配置结束 -----------------------------------------------------------
 		}
 	}

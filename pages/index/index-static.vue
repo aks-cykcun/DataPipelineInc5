@@ -3,7 +3,7 @@
 	<view class="app">
 		<button @click="skuKey = true">打开SKU组件</button>
 		
-		<vk-u-goods-sku-popup
+		<vk-data-goods-sku-popup
 			v-model="skuKey" 
 			border-radius="20" 
 			:custom-action="findGoodsInfo"
@@ -12,7 +12,7 @@
 			@close="closeSkuPopup"
 			@add-cart="addCart"
 			@buy-now="buyNow"
-		></vk-u-goods-sku-popup>
+		></vk-data-goods-sku-popup>
 		
 	</view>
 </template>

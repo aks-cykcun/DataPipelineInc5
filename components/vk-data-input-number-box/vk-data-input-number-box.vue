@@ -1,5 +1,6 @@
+<!-- 步进器 -->
 <template>
-	<view class="vk-u-number-box">
+	<view class="vk-data-input-number-box">
 		<view class="u-icon-minus" @touchstart.prevent="btnTouchStart('minus')" @touchend.stop.prevent="clearTimer" :class="{ 'u-icon-disabled': disabled || inputVal <= min }"
 		    :style="{
 				background: bgColor,
@@ -57,10 +58,10 @@
 	 * @event {Function} blur 输入框失去焦点时触发，对象形式
 	 * @event {Function} minus 点击减少按钮时触发(按钮可点击情况下)，对象形式
 	 * @event {Function} plus 点击增加按钮时触发(按钮可点击情况下)，对象形式
-	 * @example <vk-u-number-box :min="1" :max="100"></vk-u-number-box>
+	 * @example <vk-data-input-number-box :min="1" :max="100"></vk-data-input-number-box>
 	 */
 	export default {
-		name: "vk-u-number-box",
+		name: "vk-data-input-number-box",
 		props: {
 			// 预显示的数字
 			value: {
@@ -91,6 +92,11 @@
 			stepFirst: {
 				type: Number,
 				default: 0
+			},
+			// 是否只能输入 step 的倍数
+			stepStrictly: {
+				type: Boolean,
+				default: false
 			},
 			// 是否禁用加减操作
 			disabled: {
@@ -183,6 +189,16 @@
 				}
 				// 发出change事件
 				this.handleChange(value, 'change');
+			},
+			min(v1){
+				if(v1 !== undefined && v1!="" && this.value < v1){
+					this.$emit("input",v1);
+				}
+			},
+			max(v1){
+				if(v1 !== undefined && v1!="" && this.value > v1){
+					this.$emit("input",v1);
+				}
 			}
 		},
 		data() {
@@ -281,6 +297,12 @@
 						value = this.calcPlus(this.inputVal, this.step);
 					}
 				}
+				if(this.stepStrictly){
+					let strictly = value % this.step;
+					if(strictly > 0){
+						value -= strictly;
+					}
+				}
 				if (value > this.max ) {
 					value = this.max;
 				}else if (value < this.min) {
@@ -298,16 +320,23 @@
 				// 这里不直接判断是否正整数，是因为用户传递的props min值可能为0
 				if (!/(^\d+$)/.test(value) || value[0] == 0) val = this.min;
 				val = +value;
-				if (val > this.max) {
-					val = this.max;
-				} else if (val < this.min) {
-					val = this.min;
-				}
+				
 				// 新增stepFirst开始
 				if(this.stepFirst > 0 && this.inputVal < this.stepFirst && this.inputVal>0){
 					val = this.stepFirst;
 				}
 				// 新增stepFirst结束
+				if(this.stepStrictly){
+					let strictly = val % this.step;
+					if(strictly > 0){
+						val -= strictly;
+					}
+				}
+				if (val > this.max) {
+					val = this.max;
+				} else if (val < this.min) {
+					val = this.min;
+				}
 				this.$nextTick(() => {
 					this.inputVal = val;
 				})
@@ -345,7 +374,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.vk-u-number-box {
+	.vk-data-input-number-box {
 		display: inline-flex;
 		align-items: center;
 	}
@@ -390,5 +419,5 @@
 		position: relative;
 		top:-4rpx;
 	}
-	
+
 </style>

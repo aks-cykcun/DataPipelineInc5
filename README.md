@@ -1,13 +1,33 @@
 
-### 插件名称：`vk-u-goods-sku-popup`
+### 插件名称：`vk-data-goods-sku-popup`
+### 插件类型：`业务型数据驱动组件`
 ### 作者：`VK`
-### 更新时间：`2020-12-22`
+### 更新时间：`2020-12-31`
 ##### 此插件为`vk-unicloud-router`插件的一部分独立出来而形成的。
 ##### uniCloud云函数路由开发框架研究Q群:`22466457` 如有问题或建议可以在群内讨论。
 
 ### 【开箱即用】商品sku选择器组件豪华独立版（打造uni插件市场功能最全的SKU选择器组件）
 
 ##### 商品SKU选择器组件一般用于电商商品详情页的规格选择时使用。
+
+### 【重要】自`1.1.0`版本起，组件已定义成`datacom`数据驱动式组件，组件名称已修改成`vk-data-goods-sku-popup` 原名称`vk-u-goods-sku-popup`
+### 什么是datacom?
+```js
+datacom，全称是data components，数据驱动的组件。
+
+这种组件也是vue组件，是一种子类，是基础组件的再封装。
+
+相比于普通的vue组件，datacom组件的特点是，给它绑定一个data，data中包含一组候选数据，即可自动渲染出结果。
+
+```
+### `而业务型数据驱动组件是更高一级的封装，它直接服务于业务需求，做到开箱即用！`
+### datacom对于开发者的好处
+##### datacom组件，对服务器数据规范、前端组件的数据输入和输出规范，做了定义。它提升了产业的标准化程度、细化了分工，提升了效率。
+##### 且不论产业影响，对开发者个人而言，显而易见的好处也很多：
+```js
+更少的代码量。从前述的传统写法对比可见，使用datacom的前端页面，代码量可减少一半以上。
+设计更加清晰。服务器端给符合规范的数据，然后接受选择的结果数据。中间的ui交互无需关心。
+```
 
 ### 体验地址
 ![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-vk-cloud-router-test/23023100-ffae-11ea-b997-9918a5dda011.png)
@@ -19,20 +39,20 @@
 
 ### 组件安装到自己项目步骤
 
-#####  1、将`components`目录下的`vk-u-goods-sku-popup` 和 `vk-u-number-box` 复制到你项目根目录下的`components`目录下
+#####  1、将`components`目录下的`vk-data-goods-sku-popup` 和 `vk-data-input-number-box` 复制到你项目根目录下的`components`目录下
 ##### 若你的项目根目录下无`components`则先新增一个`components`目录
 #####  2、通过下面的基本使用示例的方式使用组件，API文档 在最下面
 
 #### 基本使用示例
 ```html
-<vk-u-goods-sku-popup
+<vk-data-goods-sku-popup
   v-model="sku_key" 
   :custom-action="findGoodsInfo"
   :mode="1"	
   border-radius="20"
   @add-cart="addCart"
   @buy-now="buyNow"
-></vk-u-goods-sku-popup>
+></vk-data-goods-sku-popup>
 ```
 
 ```js
@@ -131,7 +151,9 @@ methods: {
 | borderRadius           | 顶部圆角值                                          | [String,Number] | 0           | -          |
 | minBuyNum              | 最小购买数量                                        | Number          | 1           | -          |
 | maxBuyNum              | 最大购买数量                                        | Number          | 100000      | -          |
-| stepBuyNum             | 每次点击后的数量                                     | Number          | 1           | -          |
+| stepBuyNum             | 每次点击后的数量                                     | Number    
+| stepStrictly（v1.1）           | 是否只能输入 step 的倍数                             | Boolean      | false           | true、false          |
+| hideStock（v1.1）              | 是否隐藏库存的显示                             | Boolean      | false           | true、false          |
 | customAction           | 自定义获取商品信息的函数                              | Function        | null        | -          |
 | showClose              | 是否显示右上角关闭按钮                                | Boolean | true | true、false |
 | closeImage             | 关闭按钮的图片地址                                    | String  | -    | -             |

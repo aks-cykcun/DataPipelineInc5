@@ -1,12 +1,11 @@
 <template>
-	<view 
-		class="vk-u-goods-sku-popup popup" catchtouchmove="true" 
+	<view
+		class="vk-data-goods-sku-popup popup" catchtouchmove="true"
 		:class="(value && complete) ? 'show' : 'none'" @touchmove.stop.prevent="moveHandle"
 	>
 		<!-- 页面内容开始 -->
 		<view class="mask"  @click="close('mask')"></view>
-		<!-- 页面开始 -->
-		<view class="layer attr-content" 
+		<view class="layer attr-content"
 			:style="'border-radius: '+borderRadius+'rpx '+borderRadius+'rpx 0 0;'"
 		>
 			<view class="specification-wrapper">
@@ -20,13 +19,15 @@
 								<text class="sign">¥</text>
 								<text class="price">{{ selectShop.price | priceFilter }}</text>
 							</view>
-							<view class="inventory">{{ stockText }}：{{ selectShop[stockName] || 0 }}</view>
-							<view class="choose" v-show="goodsInfo[specListName] && goodsInfo[specListName][0].name !== defaultSingleSkuName">已选：{{ selectArr.join(' ') }}</view>
+							<view class="inventory" v-if="!hideStock">{{ stockText }}：{{ selectShop[stockName] || 0 }}</view>
+							<view class="inventory" v-else></view>
+							<view class="choose" v-show="isManyCom">已选：{{ selectArr.join(' ') }}</view>
 						</view>
 					</view>
-					
+
+
 					<view class="specification-content">
-						<view v-show="goodsInfo[specListName][0].name !== defaultSingleSkuName" class="specification-item" v-for="(item, index1) in goodsInfo[specListName]" :key="index1">
+						<view v-show="isManyCom" class="specification-item" v-for="(item, index1) in goodsInfo[specListName]" :key="index1">
 							<view class="item-title">{{ item.name }}</view>
 							<view class="item-wrapper">
 								<view
@@ -49,21 +50,24 @@
 								数量
 							</view>
 							<view style="flex: 4;text-align: right;">
-								<vk-u-number-box
-									:min="minBuyNum" :max="maxBuyNum" :step="stepBuyNum" 
+								<vk-data-input-number-box
 									v-model="selectNum"
-									:positive-integer="true">
-								</vk-u-number-box>
+									:min="minBuyNum" 
+									:max="maxBuyNumCom" 
+									:step="stepBuyNum" 
+									:step-strictly="stepStrictly"
+									:positive-integer="true"
+								></vk-data-input-number-box>
 							</view>
 						</view>
-						
+
 					</view>
 				</scroll-view>
 				<view class="close" @click="close('close')" v-if="showClose">
 					<image class="close-item" :src="closeImage"></image>
 				</view>
 			</view>
-			
+
 			<view class="btn-wrapper" v-if="outFoStock || mode == 4">
 				<view class="sure"
 					style="color:#ffffff;background-color:#cccccc"
@@ -73,7 +77,7 @@
 				<view class="sure add-cart" style="border-radius:38rpx 0rpx 0rpx 38rpx;" @click="addCart"
 					:style="'color:'+addCartColor+';background-color:'+addCartBackgroundColor"
 				>{{ addCartText }}</view>
-				
+
 				<view class="sure"  style="border-radius:0rpx 38rpx 38rpx 0rpx;" @click="buyNow"
 					:style="'color:'+buyNowColor+';background-color:'+buyNowBackgroundColor"
 				>{{ buyNowText }}</view>
@@ -88,8 +92,6 @@
 					:style="'color:'+buyNowColor+';background-color:'+buyNowBackgroundColor"
 				>{{ buyNowText }}</view>
 			</view>
-			
-		<!-- 页面结束 -->
 		</view>
 		<!-- 页面内容结束 -->
 	</view>
@@ -97,9 +99,10 @@
 
 <script>
 	var that;											// 当前页面对象
-	var vk;												// 自定义函数集
+	var vk;												// vk依赖
+	var goodsCache = {};					// 本地商品缓存
 	export default {
-		name: 'vk-u-goods-sku-popup',
+		name: 'vk-data-goods-sku-popup',
 		props: {
 			// true 组件显示 false 组件隐藏
 			value:{
@@ -148,7 +151,7 @@
 				Type:String,
 				default:"spec_list"
 			},
-			// stock的字段名
+			// 库存的字段名 默认 stock
 			stockName:{
 				Type:String,
 				default:"stock"
@@ -188,20 +191,25 @@
 				Type:[String],
 				default:"goods_thumb"
 			},
-			// 最小购买数量
+			// 最小购买数量 默认 1
 			minBuyNum:{
-				Type:Number,
+				Type:[Number,String],
 				default:1
 			},
-			// 最大购买数量
+			// 最大购买数量 默认 100000
 			maxBuyNum:{
-				Type:Number,
+				Type:[Number,String],
 				default:100000
 			},
-			// 每次点击后的数量
+			// 步进器步长 默认 1
 			stepBuyNum:{
-				Type:Number,
+				Type:[Number,String],
 				default:1
+			},
+			// 是否只能输入 step 的倍数
+			stepStrictly:{
+				Type:Boolean,
+				default:false
 			},
 			// 自定义获取商品信息的函数
 			customAction:{
@@ -263,10 +271,15 @@
 				Type:Boolean,
 				default:true
 			},
-			// 关闭按钮的图片地址
+			// 关闭按钮的图片地址 https://img.alicdn.com/imgextra/i1/121022687/O1CN01ImN0O11VigqwzpLiK_!!121022687.png
 			closeImage:{
 				Type:String,
-				default:"https://img.alicdn.com/imgextra/i1/121022687/O1CN01ImN0O11VigqwzpLiK_!!121022687.png"
+				default:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAEyUlEQVR42sSZeWwNURTGp4OqtBo7sSXELragdkpQsRRJ1Zr4hyJiJ9YgxNIg1qANiT+E1i5IY0kVVWtQEbuEKLFGUSH27/ANN5PXmTvzupzkl/tm8t6b7517lnvvC0lKSjJ8WmnQAUSDFqABqALKgl8gD7wE90E2SAeXwFf1SxISErQeVtKHwCgwFsSDSIf3hYFKoCkYDBaDdyAViHdueHmoF6FtwDLQ23b/E7gM7oIcejIERIDaoBFoC8qA8mA8SQNz6W1XC9GY+nCQCCYAk/c+gF0gBZwH312+IxR0BCPBUIaH2A+wHsxHCHxx+gLT5QGN6a2JfG8uvVCDws9oiDQYlxkMGfHyQvARlADTwcXk5OT6foV2kS8ATXidymlcyen1a/Jjl9IJh3hPkjELYqO8Cu0KjjNZvtETw5jFBWXPmGSTGQKSeOn5iQ0kVLL0CINfPNcPbDMKyRCbGzEMBJ+ZD8cChYFdqGTqfsWT8otPGoVsEHsMwxDFs3shNsxJ6BrQ0Po8OGUUkVHsNCVml+cntB1jUWwn2GEUsTEMrASbDK+2CCQ0kYX6nfLLisMmKqUr0S60M+jG10vAm+JSCa8+x7CKlzHwaktV6DiObzUzPJIxFO1BQ12wGtTReO9GetVgY/kjNJzZbcWmTjHfxw51AsRqvL8eOAtmsJuFu3g1l+1ZLB5eDTVZ3K0P7tL0TkWOpSg61kVkBtuuNRthGs+wtJST5aQI7cEbkkRXNYVKgX6kIdYuUhYzMQwxN8tiExCLFqHNeSF9/aem0BzGp5PYQCJ7c/Gsk1RfuSD6U1dNpcDf9ZigTmKbMRZ9iVTsHscGJluW2FMf1SSQWGnBmaB6kCJVTVVNJZE++Cx9drEllS1KMCINpURFmEbBWA63Fz9s95cGIdJgp/zXmT4pZcOvSUzuZttTbblmnc3PIjjmidDXvKgdhMh0JdbzuCjWrbNOVovjS5P7bkPJ/mBESkz2BO0166ybNeJ431S2q+01NntuIq3E0amzjiZtk9tssWyTDzO4525bACK9NAUn68TtkNhpEXpOSagRml+S6iLSSeweHv242Qhl13rRyvoDvDlKyTQny/ZQJ+1iH7vVbEx7OR5UiKVIO7VicgvHCtwrudloMIV7/0uadVYW57O4Wvvi8v4pymlKkrpwvsDeLLZAY2pkwbAB3PSQfC+4cH7l4k1ZH8zkZRq8ecO+Z5rN40JJqnXFuGfaxPCTLjcn0OZOpnArXw8HY4paIbw5CcMgXq6HN2/mt6+XGLrN15tBryIUGavMpCTrfKcDCKkAceA9S8nhAOehhSUyhXpkBxxnP4YM1InugP7cBkjBPcqVUWFYCEROxXiQz5JlXV+IfKh7mpfJac+lZ6V87QXVClBkTc7YWsWTPSDyitfzUTlJlj8TbvE6jluDOdwZ+jX57GLO3ADeuyZrDYi86vV81FD2UVGsmT+5Zl0BnkhoseOEaogL46pqO4v/IqUEyalIR4h85BgjHv6+aUWRMbb7EstX6O0cpT1Gco0ry8fWygLDMjmDnQeBt3Qe7uVfkeugDwVLcsVzGsuwLXbV+I63XNAkG5r/hvgRqgqWs6pJPKrsbvz/Q6yyun0w/h6lP+BnzrCpfPMT2L8FGAA7k1GZ/vnaqAAAAABJRU5ErkJggg=="
+			},
+			// 隐藏库存的显示
+			hideStock:{
+				Type:Boolean,
+				default:false
 			},
 		},
 		data() {
@@ -279,16 +292,20 @@
 				selectArr: [], 							// 存放被选中的值
 				subIndex: [], 							// 是否选中 因为不确定是多规格还是单规格，所以这里定义数组来判断
 				selectShop: {},							// 存放最后选中的商品
-				selectNum: this.minBuyNum , // 选中数量
+				selectNum: this.minBuyNum, // 选中数量
 				outFoStock:false,						// 是否全部sku都缺货
+				openTime:0,
 			};
 		},
-		mounted() {
+		created() {
 			that = this;
 			vk = that.vk;
 			if(that.value){
 				that.open();
 			}
+		},
+		mounted(){
+
 		},
 		methods: {
 			// 初始化
@@ -300,7 +317,7 @@
 				that.selectNum = that.minBuyNum;
 				that.outFoStock = false;
 				that.shopItemInfo = {};
-				
+
 				let specListName = that.specListName;
 				that.goodsInfo[specListName].map(item => {
 					that.selectArr.push('');
@@ -311,19 +328,22 @@
 				that.autoClickSku(); 			// 自动选择sku策略
 			},
 			// 使用vk路由模式框架获取商品信息
-			findGoodsInfo(){
+			findGoodsInfo(obj={}){
+				let { useCache } = obj;
 				if(typeof vk == "undefined"){
-					that.toast("custom-action必须是function");
+					that.toast("custom-action必须是function","none");
 					return false;
 				}
 				vk.callFunction({
 					url: that.action,
-					title: '请求中...',
+					title: useCache ? '':'请求中...',
 					data: {
 						goods_id : that.goodsId
 					},
 					success(data) {
 						that.updateGoodsInfo(data.goodsInfo);
+						// 更新缓存 
+						goodsCache[that.goodsId] = data.goodsInfo;
 					}
 				});
 			},
@@ -348,11 +368,28 @@
 				that.$emit("input",true);
 			},
 			async open(){
+				that.openTime = new Date().getTime();
 				let findGoodsInfoRun = true;
 				let skuListName = that.skuListName;
+				
+				// 先获取缓存中的商品信息
+				let useCache = false;
+				let goodsInfo = goodsCache[that.goodsId];
+				if(goodsInfo){
+					useCache = true;
+					that.updateGoodsInfo(goodsInfo);
+				}else{
+					that.complete = false;
+				} 
+				
 				if(that.customAction && typeof(that.customAction) === 'function') {
-					let goodsInfo = await that.customAction();
-					// console.log("goodsInfo",goodsInfo);
+					let goodsInfo = await that.customAction({
+						useCache,
+						goodsId:that.goodsId,
+						goodsInfo
+					});
+					// 更新缓存
+					goodsCache[that.goodsId] = goodsInfo;
 					if(goodsInfo && typeof goodsInfo == "object" && JSON.stringify(goodsInfo) != "{}"){
 						findGoodsInfoRun = false;
 						that.updateGoodsInfo(goodsInfo);
@@ -362,19 +399,22 @@
 						return false;
 					}
 				}else{
-					if(findGoodsInfoRun) that.findGoodsInfo();
+					if(findGoodsInfoRun) that.findGoodsInfo({useCache});
 				}
 			},
 			// 监听 - 弹出层收起
 			close(s){
-				if(s == "close"){
-					that.$emit("input",false);
-					that.$emit("close","close");
-				}else if(s == "mask"){
+				if((new Date().getTime() - that.openTime) < 400){
+					return false;
+				}
+				if(s == "mask"){
 					if(that.maskCloseAble){
 						that.$emit("input",false);
 						that.$emit("close","mask");
 					}
+				}else{
+					that.$emit("input",false);
+					that.$emit("close","close");
 				}
 			},
 			moveHandle() {
@@ -478,17 +518,22 @@
 			},
 			// 检测sku选项是否已全部选完,且有库存
 			checkSelectComplete(obj = {}){
-				let selectShop = that.selectShop;
-				if(selectShop && selectShop[that.skuIdName]){
-					// 判断库存
-					if(that.selectNum <= selectShop[that.stockName]){
-						if(typeof obj.success == "function") obj.success(selectShop);
-					}else{
-						that.toast(that.stockText + "不足","none")
-					}
-				}else{
+				let that = this;
+				let { selectShop, selectNum, stockText, stockName } = that;
+				if(!selectShop || !selectShop[that.skuIdName]){
 					that.toast("请先选择对应规格","none");
+					return false;
 				}
+				if(selectNum <= 0){
+					that.toast("购买数量必须>0","none");
+					return false;
+				}
+				// 判断库存
+				if(selectNum > selectShop[stockName]){
+					that.toast(stockText + "不足","none");
+					return false;
+				}
+				if(typeof obj.success == "function") obj.success(selectShop);
 			},
 			// 加入购物车
 			addCart(){
@@ -496,6 +541,9 @@
 					success:function(selectShop){
 						selectShop.buy_num = that.selectNum;
 						that.$emit("add-cart",selectShop);
+						setTimeout(function(){
+							that.init();
+						},300);
 					}
 				});
 			},
@@ -513,7 +561,7 @@
 				uni.showToast({
 					title: title,
 					icon: icon
-				}); 
+				});
 			},
 			// 获取对象数组中的某一个item,根据指定的键值
 			getListItem(list,key,value){
@@ -561,21 +609,46 @@
 		},
 		// 计算属性
 		computed:{
-			
+			// 最大购买数量
+			maxBuyNumCom(){
+				let max = that.maxBuyNum;
+				let stockName = that.stockName;
+				if(that.selectShop && typeof that.selectShop[stockName] !== "undefined"){
+					// 最大购买量不能超过当前商品的库存
+					if(max > that.selectShop[stockName]){
+						max = that.selectShop[stockName];
+					}
+				}
+				return max;
+			},
+			// 是否是多规格
+			isManyCom(){
+				let that = this;
+				let { goodsInfo, defaultSingleSkuName, specListName } = that;
+				let isMany = true;
+				if(goodsInfo[specListName]
+					&& goodsInfo[specListName].length === 1
+					&& goodsInfo[specListName][0].list.length === 1
+					&& goodsInfo[specListName][0].name === defaultSingleSkuName
+				){
+					isMany = false;
+				}
+				return isMany;
+			}
 		},
 		watch : {
-			value:function(val) {
-				if(val){
+			value(newVal,oldValue) {
+				if(newVal){
 					that.open();
 				}
-			},
+			}
 		}
 	};
 </script>
 
 <style lang="scss" scoped>
 	/*  sku弹出层 */
-	.vk-u-goods-sku-popup {
+	.vk-data-goods-sku-popup {
 		position: fixed;
 		left: 0;
 		top: 0;
@@ -585,26 +658,26 @@
 		overflow: hidden;
 		&.show {
 			display: block;
-	
+
 			.mask {
 				animation: showPopup 0.2s linear both;
 			}
-	
+
 			.layer {
 				animation: showLayer 0.2s linear both;
 			}
 		}
-	
+
 		&.hide {
 			.mask {
 				animation: hidePopup 0.2s linear both;
 			}
-	
+
 			.layer {
 				animation: hideLayer 0.2s linear both;
 			}
 		}
-	
+
 		&.none {
 			display: none;
 		}
@@ -628,7 +701,7 @@
 			bottom: 0;
 			border-radius: 10rpx 10rpx 0 0;
 			background-color: #fff;
-	
+
 			.specification-wrapper {
 				width: 100%;
 				padding: 30rpx 25rpx;
@@ -641,26 +714,26 @@
 						/*隐藏滚轮*/
 						display: none;
 					}
-	
+
 					.specification-header {
 						width: 100%;
 						display: flex;
 						flex-direction: row;
 						position: relative;
 						margin-bottom: 40rpx;
-	
+
 						.specification-left {
 							width: 180rpx;
 							height: 180rpx;
 							flex: 0 0 180rpx;
-	
+
 							.product-img {
 								width: 180rpx;
 								height: 180rpx;
 								background-color: #999999;
 							}
 						}
-	
+
 						.specification-right {
 							flex: 1;
 							padding: 0 35rpx 0 28rpx;
@@ -669,54 +742,54 @@
 							flex-direction: column;
 							justify-content: flex-end;
 							font-weight: 500;
-	
+
 							.price-content {
 								color: #fe560a;
 								margin-bottom: 20rpx;
-	
+
 								.sign {
 									font-size: 28rpx;
 								}
-	
+
 								.price {
 									font-size: 48rpx;
 								}
 							}
-	
+
 							.inventory {
 								font-size: 24rpx;
 								color: #999999;
 								margin-bottom: 14rpx;
 							}
-	
+
 							.choose {
 								font-size: 28rpx;
 								color: #333333;
 							}
 						}
 					}
-	
+
 					.specification-content {
 						font-weight: 500;
-	
+
 						.specification-item {
 							margin-bottom: 40rpx;
-	
+
 							&:last-child {
 								margin-bottom: 0;
 							}
-	
+
 							.item-title {
 								margin-bottom: 20rpx;
 								font-size: 28rpx;
 								color: #999999;
 							}
-	
+
 							.item-wrapper {
 								display: flex;
 								flex-direction: row;
 								flex-flow: wrap;
-	
+
 								.item-content {
 									display: inline-block;
 									padding: 10rpx 35rpx;
@@ -727,12 +800,12 @@
 									margin-right: 20rpx;
 									border: 2rpx solid #f4f4f4;
 									box-sizing: border-box;
-	
+
 									&.actived {
 										border-color: #fe560a;
 										color: #fe560a;
 									}
-	
+
 									&.noactived {
 										background-color: #e4e4e4;
 										border-color: #e4e4e4;
@@ -767,7 +840,7 @@
 				justify-content: space-between;
 				padding: 0 26rpx;
 				box-sizing: border-box;
-	
+
 				.layer-btn {
 					width: 335rpx;
 					height: 76rpx;
@@ -777,11 +850,11 @@
 					text-align: center;
 					font-weight: 500;
 					font-size: 28rpx;
-	
+
 					&.add-cart {
 						background: #ffbe46;
 					}
-	
+
 					&.buy {
 						background: #fe560a;
 					}
@@ -802,42 +875,42 @@
 				}
 			}
 		}
-	
+
 		@keyframes showPopup {
 			0% {
 				opacity: 0;
 			}
-	
+
 			100% {
 				opacity: 1;
 			}
 		}
-	
+
 		@keyframes hidePopup {
 			0% {
 				opacity: 1;
 			}
-	
+
 			100% {
 				opacity: 0;
 			}
 		}
-	
+
 		@keyframes showLayer {
 			0% {
 				transform: translateY(120%);
 			}
-	
+
 			100% {
 				transform: translateY(0%);
 			}
 		}
-	
+
 		@keyframes hideLayer {
 			0% {
 				transform: translateY(0);
 			}
-	
+
 			100% {
 				transform: translateY(120%);
 			}

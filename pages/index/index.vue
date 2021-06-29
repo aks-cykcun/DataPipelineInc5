@@ -7,11 +7,7 @@
 			:custom-action="findGoodsInfo"
 			:mode="form.skuMode"
 			:buy-now-text="form.buyNowText"
-			:buy-now-color = "form.buyNowColor"
-			:buy-now-background-color="form.buyNowBackgroundColor"
 			:add-cart-text="form.addCartText"
-			:add-cart-color = "form.addCartColor"
-			:add-cart-background-color="form.addCartBackgroundColor"
 			:no-stock-text="form.noStockText"
 			:min-buy-num="form.minBuyNum"
 			:max-buy-num="form.maxBuyNum"
@@ -19,8 +15,8 @@
 			:stepStrictly="form.stepStrictly"
 			:show-close="form.showClose"
 			:mask-close-able="form.maskCloseAble"
-			:price-color="form.priceColor"
 			:hide-stock="form.hideStock"
+			:theme="form.theme"
 			@open="openSkuPopup"
 			@close="closeSkuPopup"
 			@add-cart="addCart"
@@ -39,7 +35,7 @@
 						</view>
 						<view class="radio">
 							<radio value="002" /><text>商品2：单组多规格商品</text>
-						</view class="radio">
+						</view>
 						<view class="radio">
 							<radio value="003" /><text>商品3：单组单规格商品</text>
 						</view>
@@ -49,7 +45,7 @@
 					</radio-group>
 				</view>
 				
-				<view class="form-item">
+				<view class="form-item" style="margin-top: 20rpx;">
 					<view class="title" style="width: 180rpx;">模式</view>
 					<radio-group name="radio"  @change="skuModeChange">
 						<view class="radio">
@@ -57,9 +53,29 @@
 						</view>
 						<view class="radio">
 							<radio value="2" /><text>只显示购物车</text>
-						</view class="radio">
+						</view>
 						<view class="radio">
 							<radio value="3" /><text>只显示立即购买</text>
+						</view>
+					</radio-group>
+				</view>
+				<view class="form-item" style="margin-top: 20rpx;">
+					<view class="title" style="width: 180rpx;">主题风格</view>
+					<radio-group name="radio" @change="themeChange">
+						<view class="radio">
+							<radio value="default" checked/><text>默认</text>
+						</view>
+						<view class="radio">
+							<radio value="red-black" /><text>红黑</text>
+						</view>
+						<view class="radio">
+							<radio value="black-white" /><text>黑白</text>
+						</view>
+						<view class="radio">
+							<radio value="coffee" /><text>咖啡</text>
+						</view>
+						<view class="radio">
+							<radio value="green" /><text>浅绿</text>
 						</view>
 					</radio-group>
 				</view>
@@ -71,20 +87,6 @@
 					</view>
 				</view>
 				<view class="form-item">
-					<view class="title">立即购买文字颜色</view>
-					<view class="input-view">
-						<view :style="'background-color: '+form.buyNowColor+';width: 30rpx;height: 30rpx;'"></view>
-						<input class="input" v-model="form.buyNowColor"/>
-					</view>
-				</view>
-				<view class="form-item">
-					<view class="title">立即购买按钮背景色</view>
-					<view class="input-view">
-						<view :style="'background-color: '+form.buyNowBackgroundColor+';width: 30rpx;height: 30rpx;'"></view>
-						<input class="input" v-model="form.buyNowBackgroundColor"/>
-					</view>
-				</view>
-				<view class="form-item">
 					<view class="title">加入购物车文字</view>
 					<view class="input-view">
 						<view style="width: 30rpx;height: 30rpx;"></view>
@@ -92,31 +94,10 @@
 					</view>
 				</view>
 				<view class="form-item">
-					<view class="title">加入购物车文字颜色</view>
-					<view class="input-view">
-						<view :style="'background-color: '+form.addCartColor+';width: 30rpx;height: 30rpx;'"></view>
-						<input class="input" v-model="form.addCartColor"/>
-					</view>
-				</view>
-				<view class="form-item">
-					<view class="title">加入购物车按钮背景色</view>
-					<view class="input-view">
-						<view :style="'background-color: '+form.addCartBackgroundColor+';width: 30rpx;height: 30rpx;'"></view>
-						<input class="input" v-model="form.addCartBackgroundColor"/>
-					</view>
-				</view>
-				<view class="form-item">
 					<view class="title">无库存时按钮文字</view>
 					<view class="input-view">
 						<view style="width: 30rpx;height: 30rpx;"></view>
 						<input class="input" v-model="form.noStockText"/>
-					</view>
-				</view>
-				<view class="form-item">
-					<view class="title">价格的字体颜色</view>
-					<view class="input-view">
-						<view :style="'background-color: '+form.priceColor+';width: 30rpx;height: 30rpx;'"></view>
-						<input class="input" v-model="form.priceColor"/>
 					</view>
 				</view>
 				<view class="form-item">
@@ -169,18 +150,14 @@
 				form:{
 					skuMode:1,
 					buyNowText:"立即购买",
-					buyNowColor:"#ffffff",
-					buyNowBackgroundColor:"#fe560a",
 					addCartText:"加入购物车",
-					addCartColor:"#ffffff",
-					addCartBackgroundColor:"#ff9402",
 					noStockText:"该商品已抢完",
 					minBuyNum:1,
 					maxBuyNum:10000,
 					stepBuyNum:1,
 					stepStrictly:false,
-					priceColor:"#fe560a",
-					hideStock:false
+					hideStock:false,
+					theme:"default" // 主题
 				}
 			}
 		},
@@ -295,6 +272,10 @@
 			},
 			skuModeChange(e){
 				that.form.skuMode = e.detail.value;
+				that.sku_key = true;
+			},
+			themeChange(e){
+				that.form.theme = e.detail.value;
 				that.sku_key = true;
 			},
 			stepStrictlyChange(e){

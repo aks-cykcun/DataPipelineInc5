@@ -2,7 +2,7 @@
 ### 插件名称：`vk-data-goods-sku-popup`
 ### 插件类型：`业务型数据驱动组件`
 ### 作者：`VK`
-### 更新时间：`2020-12-31`
+### 更新时间：`2021-01-04`
 ##### 此插件为`vk-unicloud-router`插件的一部分独立出来而形成的。
 ##### uniCloud云函数路由开发框架研究Q群:`22466457` 如有问题或建议可以在群内讨论。
 
@@ -154,6 +154,7 @@ methods: {
 | stepBuyNum             | 每次点击后的数量                                     | Number    
 | stepStrictly（v1.1）           | 是否只能输入 step 的倍数                             | Boolean      | false           | true、false          |
 | hideStock（v1.1）              | 是否隐藏库存的显示                             | Boolean      | false           | true、false          |
+| theme（v1.1.1）              | 主题风格                             | String      | default     | default、red-black、black-white、coffee、green  |
 | customAction           | 自定义获取商品信息的函数                              | Function        | null        | -          |
 | showClose              | 是否显示右上角关闭按钮                                | Boolean | true | true、false |
 | closeImage             | 关闭按钮的图片地址                                    | String  | -    | -             |

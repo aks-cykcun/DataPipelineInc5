@@ -15,7 +15,9 @@
 							<image class="product-img" :src="selectShop.image ? selectShop.image : goodsInfo[goodsThumbName]" mode="aspectFill"></image>
 						</view>
 						<view class="specification-right">
-							<view class="price-content" :style="'color: '+priceColor+' ;'">
+							<view class="price-content" :style="{
+								color:themeColorFn('priceColor')
+							}">
 								<text class="sign">¥</text>
 								<text class="price">{{ selectShop.price | priceFilter }}</text>
 							</view>
@@ -36,9 +38,9 @@
 									v-for="(item_value, index2) in item.list"
 									:key="index2"
 									:class="[item_value.ishow ? '' : 'noactived', subIndex[index1] == index2 ? 'actived' : '']"
-									:style="[item_value.ishow ? '' : disableStyle,
-													item_value.ishow ? btnStyle :'',
-													subIndex[index1] == index2 ? activedStyle : ''
+									:style="[item_value.ishow ? '' : themeColorFn('disableStyle'),
+													item_value.ishow ? themeColorFn('btnStyle') :'',
+													subIndex[index1] == index2 ? themeColorFn('activedStyle') : ''
 									]"
 									>
 									{{ item_value.name }}
@@ -75,21 +77,33 @@
 			</view>
 			<view class="btn-wrapper" v-else-if="mode == 1">
 				<view class="sure add-cart" style="border-radius:38rpx 0rpx 0rpx 38rpx;" @click="addCart"
-					:style="'color:'+addCartColor+';background-color:'+addCartBackgroundColor"
+					:style="{
+						color:themeColorFn('addCartColor'),
+						backgroundColor:themeColorFn('addCartBackgroundColor')
+					}"
 				>{{ addCartText }}</view>
 
 				<view class="sure"  style="border-radius:0rpx 38rpx 38rpx 0rpx;" @click="buyNow"
-					:style="'color:'+buyNowColor+';background-color:'+buyNowBackgroundColor"
+					:style="{
+						color:themeColorFn('buyNowColor'),
+						backgroundColor:themeColorFn('buyNowBackgroundColor')
+					}"
 				>{{ buyNowText }}</view>
 			</view>
 			<view class="btn-wrapper" v-else-if="mode == 2">
 				<view class="sure add-cart" @click="addCart"
-					:style="'color:'+addCartColor+';background-color:'+addCartBackgroundColor"
+					:style="{
+						color:themeColorFn('addCartColor'),
+						backgroundColor:themeColorFn('addCartBackgroundColor')
+					}"
 				>{{ addCartText }}</view>
 			</view>
 			<view class="btn-wrapper" v-else-if="mode == 3">
 				<view class="sure"  @click="buyNow"
-					:style="'color:'+buyNowColor+';background-color:'+buyNowBackgroundColor"
+					:style="{
+						color:themeColorFn('buyNowColor'),
+						backgroundColor:themeColorFn('buyNowBackgroundColor')
+					}"
 				>{{ buyNowText }}</view>
 			</view>
 		</view>
@@ -219,7 +233,6 @@
 			// 价格的字体颜色
 			priceColor:{
 				Type:String,
-				default:"#fe560a"
 			},
 			// 立即购买按钮的文字
 			buyNowText:{
@@ -228,13 +241,11 @@
 			},
 			// 立即购买按钮的字体颜色
 			buyNowColor:{
-				Type:String,
-				default:"#ffffff"
+				Type:String
 			},
 			// 立即购买按钮的背景颜色
 			buyNowBackgroundColor:{
-				Type:String,
-				default:"#fe560a"
+				Type:String
 			},
 			// 加入购物车按钮的文字
 			addCartText:{
@@ -243,13 +254,11 @@
 			},
 			// 加入购物车按钮的字体颜色
 			addCartColor:{
-				Type:String,
-				default:"#ffffff"
+				Type:String
 			},
 			// 加入购物车按钮的背景颜色
 			addCartBackgroundColor:{
-				Type:String,
-				default:"#ff9402"
+				Type:String
 			},
 			// 不可点击时,按钮的样式
 			disableStyle:{
@@ -276,10 +285,15 @@
 				Type:String,
 				default:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAEyUlEQVR42sSZeWwNURTGp4OqtBo7sSXELragdkpQsRRJ1Zr4hyJiJ9YgxNIg1qANiT+E1i5IY0kVVWtQEbuEKLFGUSH27/ANN5PXmTvzupzkl/tm8t6b7517lnvvC0lKSjJ8WmnQAUSDFqABqALKgl8gD7wE90E2SAeXwFf1SxISErQeVtKHwCgwFsSDSIf3hYFKoCkYDBaDdyAViHdueHmoF6FtwDLQ23b/E7gM7oIcejIERIDaoBFoC8qA8mA8SQNz6W1XC9GY+nCQCCYAk/c+gF0gBZwH312+IxR0BCPBUIaH2A+wHsxHCHxx+gLT5QGN6a2JfG8uvVCDws9oiDQYlxkMGfHyQvARlADTwcXk5OT6foV2kS8ATXidymlcyen1a/Jjl9IJh3hPkjELYqO8Cu0KjjNZvtETw5jFBWXPmGSTGQKSeOn5iQ0kVLL0CINfPNcPbDMKyRCbGzEMBJ+ZD8cChYFdqGTqfsWT8otPGoVsEHsMwxDFs3shNsxJ6BrQ0Po8OGUUkVHsNCVml+cntB1jUWwn2GEUsTEMrASbDK+2CCQ0kYX6nfLLisMmKqUr0S60M+jG10vAm+JSCa8+x7CKlzHwaktV6DiObzUzPJIxFO1BQ12wGtTReO9GetVgY/kjNJzZbcWmTjHfxw51AsRqvL8eOAtmsJuFu3g1l+1ZLB5eDTVZ3K0P7tL0TkWOpSg61kVkBtuuNRthGs+wtJST5aQI7cEbkkRXNYVKgX6kIdYuUhYzMQwxN8tiExCLFqHNeSF9/aem0BzGp5PYQCJ7c/Gsk1RfuSD6U1dNpcDf9ZigTmKbMRZ9iVTsHscGJluW2FMf1SSQWGnBmaB6kCJVTVVNJZE++Cx9drEllS1KMCINpURFmEbBWA63Fz9s95cGIdJgp/zXmT4pZcOvSUzuZttTbblmnc3PIjjmidDXvKgdhMh0JdbzuCjWrbNOVovjS5P7bkPJ/mBESkz2BO0166ybNeJ431S2q+01NntuIq3E0amzjiZtk9tssWyTDzO4525bACK9NAUn68TtkNhpEXpOSagRml+S6iLSSeweHv242Qhl13rRyvoDvDlKyTQny/ZQJ+1iH7vVbEx7OR5UiKVIO7VicgvHCtwrudloMIV7/0uadVYW57O4Wvvi8v4pymlKkrpwvsDeLLZAY2pkwbAB3PSQfC+4cH7l4k1ZH8zkZRq8ecO+Z5rN40JJqnXFuGfaxPCTLjcn0OZOpnArXw8HY4paIbw5CcMgXq6HN2/mt6+XGLrN15tBryIUGavMpCTrfKcDCKkAceA9S8nhAOehhSUyhXpkBxxnP4YM1InugP7cBkjBPcqVUWFYCEROxXiQz5JlXV+IfKh7mpfJac+lZ6V87QXVClBkTc7YWsWTPSDyitfzUTlJlj8TbvE6jluDOdwZ+jX57GLO3ADeuyZrDYi86vV81FD2UVGsmT+5Zl0BnkhoseOEaogL46pqO4v/IqUEyalIR4h85BgjHv6+aUWRMbb7EstX6O0cpT1Gco0ry8fWygLDMjmDnQeBt3Qe7uVfkeugDwVLcsVzGsuwLXbV+I63XNAkG5r/hvgRqgqWs6pJPKrsbvz/Q6yyun0w/h6lP+BnzrCpfPMT2L8FGAA7k1GZ/vnaqAAAAABJRU5ErkJggg=="
 			},
-			// 隐藏库存的显示
+			// 是否隐藏库存显示
 			hideStock:{
 				Type:Boolean,
 				default:false
+			},
+			// 颜色主题
+			theme:{
+				Type:String,
+				default:"default"
 			},
 		},
 		data() {
@@ -295,6 +309,88 @@
 				selectNum: this.minBuyNum, // 选中数量
 				outFoStock:false,						// 是否全部sku都缺货
 				openTime:0,
+				themeColor:{
+					// 默认主题
+					"default":{
+						priceColor:"rgb(254, 86, 10)",
+						buyNowColor:"#ffffff",
+						buyNowBackgroundColor:"rgb(254, 86, 10)",
+						addCartColor:"#ffffff",
+						addCartBackgroundColor:"rgb(255, 148, 2)",
+						btnStyle:{
+							color:"#333333",
+							borderColor:"#f4f4f4",
+							backgroundColor:"#ffffff",
+						},
+						activedStyle:{
+							color:"rgb(254, 86, 10)",
+							borderColor:"rgb(254, 86, 10)",
+							backgroundColor:"rgba(254,86,10,0.1)"
+						},
+						disableStyle:{
+							color:"#c3c3c3",
+							borderColor:"#f6f6f6",
+							backgroundColor:"#f6f6f6",
+						}
+					},
+					// 红黑主题
+					"red-black":{
+						priceColor:"rgb(255, 68, 68)",
+						buyNowColor:"#ffffff",
+						buyNowBackgroundColor:"rgb(255, 68, 68)",
+						addCartColor:"#ffffff",
+						addCartBackgroundColor:"rgb(85, 85, 85)",
+						activedStyle:{
+							color:"rgb(255, 68, 68)",
+							borderColor:"rgb(255, 68, 68)",
+							backgroundColor:"rgba(255,68,68,0.1)"
+						}
+					},
+					// 黑白主题
+					"black-white":{
+						priceColor:"rgb(47, 47, 52)",
+						buyNowColor:"#ffffff",
+						buyNowBackgroundColor:"rgb(47, 47, 52)",
+						addCartColor:"rgb(47, 47, 52)",
+						addCartBackgroundColor:"rgb(235, 236, 242)",
+						// btnStyle:{
+						// 	color:"rgb(47, 47, 52)",
+						// 	borderColor:"rgba(235,236,242,0.5)",
+						// 	backgroundColor:"rgba(235,236,242,0.5)",
+						// },
+						activedStyle:{
+							color:"rgb(47, 47, 52)",
+							borderColor:"rgba(47,47,52,0.12)",
+							backgroundColor:"rgba(47,47,52,0.12)",
+						}
+					},
+					// 咖啡色主题
+					"coffee":{
+						priceColor:"rgb(195, 167, 105)",
+						buyNowColor:"#ffffff",
+						buyNowBackgroundColor:"rgb(195, 167, 105)",
+						addCartColor:"rgb(195, 167, 105)",
+						addCartBackgroundColor:"rgb(243, 238, 225)",
+						activedStyle:{
+							color:"rgb(195, 167, 105)",
+							borderColor:"rgb(195, 167, 105)",
+							backgroundColor:"rgba(195, 167, 105,0.1)"
+						}
+					},
+					// 浅绿色主题
+					"green":{
+						priceColor:"rgb(99, 190, 114)",
+						buyNowColor:"#ffffff",
+						buyNowBackgroundColor:"rgb(99, 190, 114)",
+						addCartColor:"rgb(99, 190, 114)",
+						addCartBackgroundColor:"rgb(225, 244, 227)",
+						activedStyle:{
+							color:"rgb(99, 190, 114)",
+							borderColor:"rgb(99, 190, 114)",
+							backgroundColor:"rgba(99, 190, 114,0.1)"
+						}
+					},
+				}
 			};
 		},
 		created() {
@@ -595,7 +691,14 @@
 						}
 					}
 				}
-			}
+			},
+			// 主题颜色
+			themeColorFn(name){
+				let that = this;
+				let { theme, themeColor } = that;
+				let color = that[name] ? that[name] : themeColor[theme][name];
+				return color;
+			},
 		},
 		// 过滤器
 		filters:{
@@ -798,19 +901,17 @@
 									background-color: #ffffff;
 									color: #333333;
 									margin-right: 20rpx;
-									border: 2rpx solid #f4f4f4;
+									border: 1px solid #f4f4f4;
 									box-sizing: border-box;
-
 									&.actived {
 										border-color: #fe560a;
 										color: #fe560a;
 									}
 
 									&.noactived {
-										background-color: #e4e4e4;
-										border-color: #e4e4e4;
-										color: #9e9e9e;
-										text-decoration: line-through;
+										background-color: #f6f6f6;
+										border-color: #f6f6f6;
+										color: #c3c3c3;
 									}
 								}
 							}

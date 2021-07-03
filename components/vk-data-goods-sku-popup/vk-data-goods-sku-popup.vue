@@ -54,9 +54,9 @@
 							<view style="flex: 4;text-align: right;">
 								<vk-data-input-number-box
 									v-model="selectNum"
-									:min="minBuyNum" 
+									:min="minBuyNum || 1" 
 									:max="maxBuyNumCom" 
-									:step="stepBuyNum" 
+									:step="stepBuyNum || 1" 
 									:step-strictly="stepStrictly"
 									:positive-integer="true"
 								></vk-data-input-number-box>
@@ -213,7 +213,7 @@
 			// 最大购买数量 默认 100000
 			maxBuyNum:{
 				Type:[Number,String],
-				default:100000
+				default: 100000
 			},
 			// 步进器步长 默认 1
 			stepBuyNum:{
@@ -295,6 +295,12 @@
 				Type:String,
 				default:"default"
 			},
+			
+			actionTips:{
+				Type:String,
+				default:"请求中..."
+			},
+			
 		},
 		data() {
 			return {
@@ -306,7 +312,7 @@
 				selectArr: [], 							// 存放被选中的值
 				subIndex: [], 							// 是否选中 因为不确定是多规格还是单规格，所以这里定义数组来判断
 				selectShop: {},							// 存放最后选中的商品
-				selectNum: this.minBuyNum, // 选中数量
+				selectNum: this.minBuyNum || 1, // 选中数量
 				outFoStock:false,						// 是否全部sku都缺货
 				openTime:0,
 				themeColor:{
@@ -410,7 +416,7 @@
 				that.selectArr = [];
 				that.subIndex = [];
 				that.selectShop = {};
-				that.selectNum = that.minBuyNum;
+				that.selectNum = that.minBuyNum || 1;
 				that.outFoStock = false;
 				that.shopItemInfo = {};
 
@@ -430,9 +436,18 @@
 					that.toast("custom-action必须是function","none");
 					return false;
 				}
+				let { actionTips } = this;
+				let actionTitle = "";
+				let actionAoading = false;
+				if(actionTips !== "custom"){
+					actionTitle = useCache ? '':'请求中...';
+				}else{
+					actionAoading = useCache ? false : true;
+				}
 				vk.callFunction({
 					url: that.action,
-					title: useCache ? '':'请求中...',
+					title: actionTitle,
+					loading : actionAoading,
 					data: {
 						goods_id : that.goodsId
 					},
@@ -536,7 +551,7 @@
 				// 如果全部选完
 				if (that.selectArr.every(item => item != '')) {
 					that.selectShop = that.shopItemInfo[that.selectArr];
-					that.selectNum = that.minBuyNum;
+					that.selectNum = that.minBuyNum || 1;
 				}else{
 					that.selectShop = {};
 				}
@@ -714,7 +729,7 @@
 		computed:{
 			// 最大购买数量
 			maxBuyNumCom(){
-				let max = that.maxBuyNum;
+				let max = that.maxBuyNum || 100000;
 				let stockName = that.stockName;
 				if(that.selectShop && typeof that.selectShop[stockName] !== "undefined"){
 					// 最大购买量不能超过当前商品的库存

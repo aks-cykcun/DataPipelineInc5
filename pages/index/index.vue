@@ -2,6 +2,7 @@
 	<view class="app">
 		<button @click="sku_key = true">打开SKU组件</button>
 		<vk-data-goods-sku-popup
+			ref="skuPopup"
 			v-model="sku_key" 
 			border-radius="20" 
 			:custom-action="findGoodsInfo"
@@ -17,6 +18,7 @@
 			:mask-close-able="form.maskCloseAble"
 			:hide-stock="form.hideStock"
 			:theme="form.theme"
+			:default-select="form.defaultSelect"
 			@open="openSkuPopup"
 			@close="closeSkuPopup"
 			@add-cart="addCart"
@@ -157,7 +159,11 @@
 					stepBuyNum:1,
 					stepStrictly:false,
 					hideStock:false,
-					theme:"default" // 主题
+					theme:"default", // 主题
+					// defaultSelect:{
+					// 	sku:["红色","256G","公开版"],
+					// 	num:5
+					// }
 				}
 			}
 		},
@@ -174,6 +180,10 @@
 			// sku组件 开始-----------------------------------------------------------
 			openSkuPopup(){
 				console.log("监听 - 打开sku组件");
+				// that.$refs.skuPopup.selectSku({
+				// 	sku:["白色","256G","公开版"],
+				// 	num:5
+				// });
 			},
 			closeSkuPopup(){
 				console.log("监听 - 关闭sku组件");

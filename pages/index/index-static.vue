@@ -4,6 +4,7 @@
 		<button @click="skuKey = true">打开SKU组件</button>
 		
 		<vk-data-goods-sku-popup
+			ref="skuPopup"
 			v-model="skuKey" 
 			border-radius="20" 
 			:custom-action="findGoodsInfo"

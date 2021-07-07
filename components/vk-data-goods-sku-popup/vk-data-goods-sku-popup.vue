@@ -147,7 +147,6 @@
 </template>
 
 <script>
-var that; // 当前页面对象
 var vk; // vk依赖
 var goodsCache = {}; // 本地商品缓存
 export default {
@@ -330,14 +329,19 @@ export default {
 			Type: String,
 			default: "default"
 		},
-
+		// 请求中的提示
 		actionTips: {
 			Type: String,
 			default: "请求中..."
 		},
-
+		// 默认选中的SKU
 		defaultSelect: {
 			Type: Object
+		},
+		// 是否使用缓存
+		useCache:{
+			Type: Boolean,
+			default: true
 		}
 	},
 	data() {
@@ -438,7 +442,7 @@ export default {
 		};
 	},
 	created() {
-		that = this;
+		let that = this;
 		vk = that.vk;
 		if (that.value) {
 			that.open();
@@ -448,6 +452,7 @@ export default {
 	methods: {
 		// 初始化
 		init() {
+			let that = this;
 			// 清空之前的数据
 			that.selectArr = [];
 			that.subIndex = [];
@@ -467,12 +472,13 @@ export default {
 		},
 		// 使用vk路由模式框架获取商品信息
 		findGoodsInfo(obj = {}) {
+			let that = this;
 			let { useCache } = obj;
 			if (typeof vk == "undefined") {
 				that.toast("custom-action必须是function", "none");
 				return false;
 			}
-			let { actionTips } = this;
+			let { actionTips } = that;
 			let actionTitle = "";
 			let actionAoading = false;
 			if (actionTips !== "custom") {
@@ -499,6 +505,7 @@ export default {
 		},
 		// 更新商品信息(库存、名称、图片)
 		updateGoodsInfo(goodsInfo) {
+			let that = this;
 			let { skuListName } = that;
 			if (
 				JSON.stringify(that.goodsInfo) === "{}" ||
@@ -526,6 +533,7 @@ export default {
 			that.$emit("input", true);
 		},
 		async open() {
+			let that = this;
 			that.openTime = new Date().getTime();
 			let findGoodsInfoRun = true;
 			let skuListName = that.skuListName;
@@ -533,7 +541,7 @@ export default {
 			// 先获取缓存中的商品信息
 			let useCache = false;
 			let goodsInfo = goodsCache[that.goodsId];
-			if (goodsInfo) {
+			if (goodsInfo && that.useCache) {
 				useCache = true;
 				that.updateGoodsInfo(goodsInfo);
 			} else {
@@ -562,6 +570,7 @@ export default {
 		},
 		// 监听 - 弹出层收起
 		close(s) {
+			let that = this;
 			if (new Date().getTime() - that.openTime < 400) {
 				return false;
 			}
@@ -580,6 +589,7 @@ export default {
 		},
 		// sku按钮的点击事件
 		skuClick(value, index1, index2) {
+			let that = this;
 			if (value.ishow) {
 				if (that.selectArr[index1] != value.name) {
 					that.$set(that.selectArr, index1, value.name);
@@ -595,6 +605,7 @@ export default {
 		},
 		// 检测是否已经选完sku
 		checkSelectShop() {
+			let that = this;
 			// 如果全部选完
 			if (that.selectArr.every(item => item != "")) {
 				that.selectShop = that.shopItemInfo[that.selectArr];
@@ -615,6 +626,7 @@ export default {
 		},
 		// 检查路径
 		checkInpath(clickIndex) {
+			let that = this;
 			let specListName = that.specListName;
 			//console.time('筛选可选路径需要的时间是');
 			//循环所有属性判断哪些属性可选
@@ -646,6 +658,7 @@ export default {
 		},
 		// 计算sku里面规格形成路径
 		checkItem() {
+			let that = this;
 			// console.time('计算有多小种可选路径需要的时间是');
 			let { stockName } = that;
 			let skuListName = that.skuListName;
@@ -707,6 +720,7 @@ export default {
 		},
 		// 加入购物车
 		addCart() {
+			let that = this;
 			that.checkSelectComplete({
 				success: function(selectShop) {
 					selectShop.buy_num = that.selectNum;
@@ -719,6 +733,7 @@ export default {
 		},
 		// 立即购买
 		buyNow() {
+			let that = this;
 			that.checkSelectComplete({
 				success: function(selectShop) {
 					selectShop.buy_num = that.selectNum;
@@ -735,6 +750,7 @@ export default {
 		},
 		// 获取对象数组中的某一个item,根据指定的键值
 		getListItem(list, key, value) {
+			let that = this;
 			let item;
 			for (let i in list) {
 				if (typeof value == "object") {
@@ -752,6 +768,7 @@ export default {
 			return item;
 		},
 		getListIndex(list, key, value) {
+			let that = this;
 			let index = -1;
 			for (let i = 0; i < list.length; i++) {
 				if (list[i][key] === value) {
@@ -763,6 +780,7 @@ export default {
 		},
 		// 自动选择sku前提是只有一组sku,默认自动选择最前面的有库存的sku
 		autoClickSku() {
+			let that = this;
 			let skuList = that.goodsInfo[that.skuListName];
 			let specListArr = that.goodsInfo[that.specListName];
 			if (specListArr.length == 1) {
@@ -798,8 +816,8 @@ export default {
 			});
 			 */
 		selectSku(obj = {}) {
-			let { sku: skuArr, num: selectNum } = obj;
 			let that = this;
+			let { sku: skuArr, num: selectNum } = obj;
 			let specListArr = that.goodsInfo[that.specListName];
 			if (skuArr && specListArr.length === skuArr.length) {
 				let skuClickArr = [];
@@ -829,6 +847,7 @@ export default {
 			if (selectNum > 0) that.selectNum = selectNum;
 		},
 		priceFilter(n = 0) {
+			let that = this;
 			if (typeof n == "string") {
 				n = parseFloat(n);
 			}
@@ -849,6 +868,7 @@ export default {
 	computed: {
 		// 最大购买数量
 		maxBuyNumCom() {
+			let that = this;
 			let max = that.maxBuyNum || 100000;
 			let stockName = that.stockName;
 			if (that.selectShop && typeof that.selectShop[stockName] !== "undefined") {
@@ -927,6 +947,7 @@ export default {
 	},
 	watch: {
 		value(newVal, oldValue) {
+			let that = this;
 			if (newVal) {
 				that.open();
 			}

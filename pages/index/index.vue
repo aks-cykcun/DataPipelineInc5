@@ -1,5 +1,6 @@
 <template>
 	<view class="app">
+		<!-- 此为全功能演示版本，新手上手建议先看 pages/index/index-static.vue 页面内的代码 -->
 		<button @click="sku_key = true">打开SKU组件</button>
 		<vk-data-goods-sku-popup
 			ref="skuPopup"

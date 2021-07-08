@@ -37,11 +37,8 @@ datacom，全称是data components，数据驱动的组件。
 ##### 1、上传部署云函数cloudfunctions目录下的`findGoodsInfo`
 ##### 2、运行项目即可
 
-### 组件安装到自己项目步骤
 
-#####  1、将`components`目录下的`vk-data-goods-sku-popup` 和 `vk-data-input-number-box` 复制到你项目根目录下的`components`目录下
-##### 若你的项目根目录下无`components`则先新增一个`components`目录
-#####  2、通过下面的基本使用示例的方式使用组件，API文档 在最下面
+##### 3、通过下面的基本使用示例的方式使用组件，API文档 在最下面
 
 #### 基本使用示例
 ```html

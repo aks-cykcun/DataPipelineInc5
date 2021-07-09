@@ -20,6 +20,7 @@
 			:hide-stock="form.hideStock"
 			:theme="form.theme"
 			:default-select="form.defaultSelect"
+			:goods-id="goods_id"
 			@open="openSkuPopup"
 			@close="closeSkuPopup"
 			@add-cart="addCart"

@@ -4,6 +4,7 @@
 		catchtouchmove="true"
 		:class="value && complete ? 'show' : 'none'"
 		@touchmove.stop.prevent="moveHandle"
+		@click.stop="stop"
 	>
 		<!-- 页面内容开始 -->
 		<view class="mask" @click="close('mask')"></view>
@@ -317,7 +318,8 @@ export default {
 		// 关闭按钮的图片地址 https://img.alicdn.com/imgextra/i1/121022687/O1CN01ImN0O11VigqwzpLiK_!!121022687.png
 		closeImage: {
 			Type: String,
-			default:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAEyUlEQVR42sSZeWwNURTGp4OqtBo7sSXELragdkpQsRRJ1Zr4hyJiJ9YgxNIg1qANiT+E1i5IY0kVVWtQEbuEKLFGUSH27/ANN5PXmTvzupzkl/tm8t6b7517lnvvC0lKSjJ8WmnQAUSDFqABqALKgl8gD7wE90E2SAeXwFf1SxISErQeVtKHwCgwFsSDSIf3hYFKoCkYDBaDdyAViHdueHmoF6FtwDLQ23b/E7gM7oIcejIERIDaoBFoC8qA8mA8SQNz6W1XC9GY+nCQCCYAk/c+gF0gBZwH312+IxR0BCPBUIaH2A+wHsxHCHxx+gLT5QGN6a2JfG8uvVCDws9oiDQYlxkMGfHyQvARlADTwcXk5OT6foV2kS8ATXidymlcyen1a/Jjl9IJh3hPkjELYqO8Cu0KjjNZvtETw5jFBWXPmGSTGQKSeOn5iQ0kVLL0CINfPNcPbDMKyRCbGzEMBJ+ZD8cChYFdqGTqfsWT8otPGoVsEHsMwxDFs3shNsxJ6BrQ0Po8OGUUkVHsNCVml+cntB1jUWwn2GEUsTEMrASbDK+2CCQ0kYX6nfLLisMmKqUr0S60M+jG10vAm+JSCa8+x7CKlzHwaktV6DiObzUzPJIxFO1BQ12wGtTReO9GetVgY/kjNJzZbcWmTjHfxw51AsRqvL8eOAtmsJuFu3g1l+1ZLB5eDTVZ3K0P7tL0TkWOpSg61kVkBtuuNRthGs+wtJST5aQI7cEbkkRXNYVKgX6kIdYuUhYzMQwxN8tiExCLFqHNeSF9/aem0BzGp5PYQCJ7c/Gsk1RfuSD6U1dNpcDf9ZigTmKbMRZ9iVTsHscGJluW2FMf1SSQWGnBmaB6kCJVTVVNJZE++Cx9drEllS1KMCINpURFmEbBWA63Fz9s95cGIdJgp/zXmT4pZcOvSUzuZttTbblmnc3PIjjmidDXvKgdhMh0JdbzuCjWrbNOVovjS5P7bkPJ/mBESkz2BO0166ybNeJ431S2q+01NntuIq3E0amzjiZtk9tssWyTDzO4525bACK9NAUn68TtkNhpEXpOSagRml+S6iLSSeweHv242Qhl13rRyvoDvDlKyTQny/ZQJ+1iH7vVbEx7OR5UiKVIO7VicgvHCtwrudloMIV7/0uadVYW57O4Wvvi8v4pymlKkrpwvsDeLLZAY2pkwbAB3PSQfC+4cH7l4k1ZH8zkZRq8ecO+Z5rN40JJqnXFuGfaxPCTLjcn0OZOpnArXw8HY4paIbw5CcMgXq6HN2/mt6+XGLrN15tBryIUGavMpCTrfKcDCKkAceA9S8nhAOehhSUyhXpkBxxnP4YM1InugP7cBkjBPcqVUWFYCEROxXiQz5JlXV+IfKh7mpfJac+lZ6V87QXVClBkTc7YWsWTPSDyitfzUTlJlj8TbvE6jluDOdwZ+jX57GLO3ADeuyZrDYi86vV81FD2UVGsmT+5Zl0BnkhoseOEaogL46pqO4v/IqUEyalIR4h85BgjHv6+aUWRMbb7EstX6O0cpT1Gco0ry8fWygLDMjmDnQeBt3Qe7uVfkeugDwVLcsVzGsuwLXbV+I63XNAkG5r/hvgRqgqWs6pJPKrsbvz/Q6yyun0w/h6lP+BnzrCpfPMT2L8FGAA7k1GZ/vnaqAAAAABJRU5ErkJggg=="
+			default:
+				"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAEyUlEQVR42sSZeWwNURTGp4OqtBo7sSXELragdkpQsRRJ1Zr4hyJiJ9YgxNIg1qANiT+E1i5IY0kVVWtQEbuEKLFGUSH27/ANN5PXmTvzupzkl/tm8t6b7517lnvvC0lKSjJ8WmnQAUSDFqABqALKgl8gD7wE90E2SAeXwFf1SxISErQeVtKHwCgwFsSDSIf3hYFKoCkYDBaDdyAViHdueHmoF6FtwDLQ23b/E7gM7oIcejIERIDaoBFoC8qA8mA8SQNz6W1XC9GY+nCQCCYAk/c+gF0gBZwH312+IxR0BCPBUIaH2A+wHsxHCHxx+gLT5QGN6a2JfG8uvVCDws9oiDQYlxkMGfHyQvARlADTwcXk5OT6foV2kS8ATXidymlcyen1a/Jjl9IJh3hPkjELYqO8Cu0KjjNZvtETw5jFBWXPmGSTGQKSeOn5iQ0kVLL0CINfPNcPbDMKyRCbGzEMBJ+ZD8cChYFdqGTqfsWT8otPGoVsEHsMwxDFs3shNsxJ6BrQ0Po8OGUUkVHsNCVml+cntB1jUWwn2GEUsTEMrASbDK+2CCQ0kYX6nfLLisMmKqUr0S60M+jG10vAm+JSCa8+x7CKlzHwaktV6DiObzUzPJIxFO1BQ12wGtTReO9GetVgY/kjNJzZbcWmTjHfxw51AsRqvL8eOAtmsJuFu3g1l+1ZLB5eDTVZ3K0P7tL0TkWOpSg61kVkBtuuNRthGs+wtJST5aQI7cEbkkRXNYVKgX6kIdYuUhYzMQwxN8tiExCLFqHNeSF9/aem0BzGp5PYQCJ7c/Gsk1RfuSD6U1dNpcDf9ZigTmKbMRZ9iVTsHscGJluW2FMf1SSQWGnBmaB6kCJVTVVNJZE++Cx9drEllS1KMCINpURFmEbBWA63Fz9s95cGIdJgp/zXmT4pZcOvSUzuZttTbblmnc3PIjjmidDXvKgdhMh0JdbzuCjWrbNOVovjS5P7bkPJ/mBESkz2BO0166ybNeJ431S2q+01NntuIq3E0amzjiZtk9tssWyTDzO4525bACK9NAUn68TtkNhpEXpOSagRml+S6iLSSeweHv242Qhl13rRyvoDvDlKyTQny/ZQJ+1iH7vVbEx7OR5UiKVIO7VicgvHCtwrudloMIV7/0uadVYW57O4Wvvi8v4pymlKkrpwvsDeLLZAY2pkwbAB3PSQfC+4cH7l4k1ZH8zkZRq8ecO+Z5rN40JJqnXFuGfaxPCTLjcn0OZOpnArXw8HY4paIbw5CcMgXq6HN2/mt6+XGLrN15tBryIUGavMpCTrfKcDCKkAceA9S8nhAOehhSUyhXpkBxxnP4YM1InugP7cBkjBPcqVUWFYCEROxXiQz5JlXV+IfKh7mpfJac+lZ6V87QXVClBkTc7YWsWTPSDyitfzUTlJlj8TbvE6jluDOdwZ+jX57GLO3ADeuyZrDYi86vV81FD2UVGsmT+5Zl0BnkhoseOEaogL46pqO4v/IqUEyalIR4h85BgjHv6+aUWRMbb7EstX6O0cpT1Gco0ry8fWygLDMjmDnQeBt3Qe7uVfkeugDwVLcsVzGsuwLXbV+I63XNAkG5r/hvgRqgqWs6pJPKrsbvz/Q6yyun0w/h6lP+BnzrCpfPMT2L8FGAA7k1GZ/vnaqAAAAABJRU5ErkJggg=="
 		},
 		// 是否隐藏库存显示
 		hideStock: {
@@ -339,9 +341,16 @@ export default {
 			Type: Object
 		},
 		// 是否使用缓存
-		useCache:{
+		useCache: {
 			Type: Boolean,
 			default: true
+		},
+		/**
+		 * 默认商品,设置该值可快速展示商品
+		 * 逻辑: 先展示 defaultGoods 信息,再取数据库,再更新页面(通常为更新库存)
+		 */
+		defaultGoods: {
+			Type: Object
 		}
 	},
 	data() {
@@ -497,11 +506,22 @@ export default {
 					that.updateGoodsInfo(data.goodsInfo);
 					// 更新缓存
 					goodsCache[that.goodsId] = data.goodsInfo;
+					that.$emit("update-goods", data.goodsInfo);
 				},
 				fail() {
-					that.$emit("close", "close");
+					that.updateValue(false);
 				}
 			});
+		},
+		updateValue(value) {
+			let that = this;
+			if (value) {
+				that.$emit("open", true);
+				that.$emit("input", true);
+			} else {
+				that.$emit("input", false);
+				that.$emit("close", "close");
+			}
 		},
 		// 更新商品信息(库存、名称、图片)
 		updateGoodsInfo(goodsInfo) {
@@ -529,8 +549,6 @@ export default {
 			Object.assign(that.selectShop, select_sku_info);
 			that.defaultSelectSku();
 			that.complete = true;
-			that.$emit("open", true);
-			that.$emit("input", true);
 		},
 		async open() {
 			let that = this;
@@ -547,6 +565,7 @@ export default {
 			} else {
 				that.complete = false;
 			}
+			that.updateValue(true);
 
 			if (that.customAction && typeof that.customAction === "function") {
 				let goodsInfo = await that.customAction({
@@ -702,6 +721,11 @@ export default {
 		// 检测sku选项是否已全部选完,且有库存
 		checkSelectComplete(obj = {}) {
 			let that = this;
+			let clickTime = new Date().getTime();
+			if (that.clickTime && clickTime - that.clickTime < 400) {
+				return false;
+			}
+			that.clickTime = clickTime;
 			let { selectShop, selectNum, stockText, stockName } = that;
 			if (!selectShop || !selectShop[that.skuIdName]) {
 				that.toast("请先选择对应规格", "none");
@@ -852,7 +876,14 @@ export default {
 				n = parseFloat(n);
 			}
 			return (n / 100).toFixed(2);
-		}
+		},
+		pushGoodsCache(goodsInfo) {
+			let that = this;
+			let { goodsIdName } = that;
+			goodsCache[goodsInfo[goodsIdName]] = goodsInfo;
+		},
+		// 用于阻止冒泡
+		stop() {}
 	},
 	// 过滤器
 	filters: {
@@ -950,6 +981,16 @@ export default {
 			let that = this;
 			if (newVal) {
 				that.open();
+			}
+		},
+		defaultGoods: {
+			immediate: true,
+			handler: function(newVal, oldValue) {
+				let that = this;
+				let { goodsIdName } = that;
+				if (typeof newVal === "object" && newVal[goodsIdName] && !goodsCache[newVal[goodsIdName]]) {
+					that.pushGoodsCache(newVal);
+				}
 			}
 		}
 	}
@@ -1128,7 +1169,7 @@ export default {
 							}
 						}
 					}
-					.number-box-view{
+					.number-box-view {
 						display: flex;
 						padding-top: 30rpx;
 					}

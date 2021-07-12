@@ -565,8 +565,6 @@ export default {
 			} else {
 				that.complete = false;
 			}
-			that.updateValue(true);
-
 			if (that.customAction && typeof that.customAction === "function") {
 				let goodsInfo = await that.customAction({
 					useCache,
@@ -578,6 +576,7 @@ export default {
 				if (goodsInfo && typeof goodsInfo == "object" && JSON.stringify(goodsInfo) != "{}") {
 					findGoodsInfoRun = false;
 					that.updateGoodsInfo(goodsInfo);
+					that.updateValue(true);
 				} else {
 					that.toast("未获取到商品信息");
 					that.$emit("input", false);

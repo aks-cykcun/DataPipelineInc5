@@ -1,7 +1,7 @@
 {
   "id": "vk-data-goods-sku-popup",
   "displayName": "【开箱即用】商品多规格sku选择器组件豪华独立版【业务型数据驱动式组件】",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "商品多规格SKU选择器组件（打造uni插件市场功能最全的SKU选择器组件）",
   "keywords": [
     "vk-data-goods-sku-popup",

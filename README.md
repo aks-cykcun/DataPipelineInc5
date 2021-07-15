@@ -2,7 +2,7 @@
 ### 插件名称：`vk-data-goods-sku-popup`
 ### 插件类型：`业务型数据驱动组件`
 ### 作者：`VK`
-### 更新时间：`2021-02-18`
+### 更新时间：`2021-03-20`
 ##### 此插件为`vk-unicloud-router`插件的一部分独立出来而形成的。
 ##### uniCloud云函数路由开发框架研究Q群:`22466457` 如有问题或建议可以在群内讨论。
 
@@ -144,38 +144,37 @@ methods: {
 | 参数                   | 说明                                                | 类型      | 默认值    | 可选值        |
 |------------------------|----------------------------------------------------|---------|--------|------------|
 | v-mode                 | 双向绑定，true为打开组件，false为关闭组件             | Boolean | false  | true、false |
-| noStockText            | 该商品已抢完时的按钮文字                              | String  | 该商品已抢完 | -          |
-| stockText              | 库存文字                                            | String | 库存           | - |
+| no-stock-text            | 该商品已抢完时的按钮文字                              | String  | 该商品已抢完 | -          |
+| stock-text              | 库存文字                                            | String | 库存           | - |
 | mode                   | 模式 1:都显示  2:只显示购物车 3:只显示立即购买        | Number          | 1           | 1、2、3      |
-| maskCloseAble          | 点击遮罩是否关闭组件 true 关闭 false 不关闭 默认true  | Boolean         | true        | true、false |
-| borderRadius           | 顶部圆角值                                          | [String,Number] | 0           | -          |
-| minBuyNum              | 最小购买数量                                        | Number          | 1           | -          |
-| maxBuyNum              | 最大购买数量                                        | Number          | 100000      | -          |
-| stepBuyNum             | 每次点击后的数量                                     | Number    
-| stepStrictly（v1.1）           | 是否只能输入 step 的倍数                             | Boolean      | false           | true、false          |
-| hideStock（v1.1）              | 是否隐藏库存的显示                             | Boolean      | false           | true、false          |
+| mask-close-able          | 点击遮罩是否关闭组件 true 关闭 false 不关闭 默认true  | Boolean         | true        | true、false |
+| border-radius           | 顶部圆角值                                          | [String,Number] | 0           | -          |
+| min-buy-num              | 最小购买数量                                        | Number          | 1           | -          |
+| max-buy-num              | 最大购买数量                                        | Number          | 100000      | -          |
+| step-buy-num             | 每次点击后的数量                                     | Number    
+| step-strictly（v1.1）           | 是否只能输入 step 的倍数                             | Boolean      | false           | true、false          |
+| hide-stock（v1.1）              | 是否隐藏库存的显示                             | Boolean      | false           | true、false          |
 | theme（v1.1.1）              | 主题风格                             | String      | default     | default、red-black、black-white、coffee、green  |
-| customAction           | 自定义获取商品信息的函数                              | Function        | null        | -          |
-| showClose              | 是否显示右上角关闭按钮                                | Boolean | true | true、false |
-| closeImage             | 关闭按钮的图片地址                                    | String  | -    | -             |
-| priceColor             | 价格的字体颜色                                        | String          | #fe560a     | -          |
-| buyNowText             | 立即购买 - 按钮的文字                      | String | 立即购买    | - |
-| buyNowColor            | 立即购买 - 按钮的字体颜色                  | String | #ffffff | - |
-| buyNowBackgroundColor  | 立即购买 - 按钮的背景颜色                  | String | #fe560a | - |
-| addCartText            | 加入购物车 - 按钮的文字                    | String | 加入购物车   | - |
-| addCartColor           | 加入购物车 - 按钮的字体颜色                | String | #ffffff | - |
-| addCartBackgroundColor | 加入购物车 - 按钮的背景颜色                 | String | #ff9402 | - |
-| disableStyle           | 样式 - 不可点击时,按钮的样式  | Object | null    | - |
-| activedStyle           | 样式 - 按钮点击时的样式     | Object | null    | - |
-| btnStyle               | 样式 - 按钮常态的样式      | Object | null    | - |
-| goodsIdName            | 字段名 - 商品表id的字段名      | String | _id          | - |
-| skuIdName              | 字段名 - sku表id的字段名     | String | _id          | - |
-| skuListName            | 字段名 - 商品对应的sku列表的字段名 | String | sku_list     | - |
-| specListName           | 字段名 - 商品规格名称的字段名     | String | spec_list    | - |
-| stockName              | 字段名 - sku库存的字段名      | String | stock        | - |
-| skuName                | 字段名 - sku名称的字段名      | String | sku_name     | - |
-| skuArrName             | 字段名 - sku组合路径的字段名                            | String | sku_name_arr | - |
-| goodsThumbName         | 字段名 - 商品缩略图字段名(未选择sku时)                   | String          | goods_thumb | -          |
+| custom-action           | 自定义获取商品信息的函数                              | Function        | null        | -          |
+| show-close              | 是否显示右上角关闭按钮                                | Boolean | true | true、false |
+| close-image             | 关闭按钮的图片地址                                    | String  | -    | -             |
+| price-color             | 价格的字体颜色                                        | String          | #fe560a     | -          |
+| buy-now-text             | 立即购买 - 按钮的文字                      | String | 立即购买    | - |
+| buy-now-color            | 立即购买 - 按钮的字体颜色                  | String | #ffffff | - |
+| buy-now-background-color  | 立即购买 - 按钮的背景颜色                  | String | #fe560a | - |
+| add-cart-text            | 加入购物车 - 按钮的文字                    | String | 加入购物车   | - |
+| add-cart-color           | 加入购物车 - 按钮的字体颜色                | String | #ffffff | - |
+| add-cart-background-color | 加入购物车 - 按钮的背景颜色                 | String | #ff9402 | - |
+| disable-style           | 样式 - 不可点击时,按钮的样式  | Object | null    | - |
+| actived-style           | 样式 - 按钮点击时的样式     | Object | null    | - |
+| btn-style               | 样式 - 按钮常态的样式      | Object | null    | - |
+| goods-id-name            | 字段名 - 商品表id的字段名      | String | _id          | - |
+| sku-id-name              | 字段名 - sku表id的字段名     | String | _id          | - |
+| sku-list-name            | 字段名 - 商品对应的sku列表的字段名 | String | sku_list     | - |
+| spec-list-name           | 字段名 - 商品规格名称的字段名     | String | spec_list    | - |
+| stock-name              | 字段名 - sku库存的字段名      | String | stock        | - |
+| sku-arr-name             | 字段名 - sku组合路径的字段名(数组元素的顺序需要和specListName对应，详情请看下方)                            | String | sku_name_arr | - |
+| goods-thumb-name         | 字段名 - 商品缩略图字段名(未选择sku时)                   | String          | goods_thumb | -          |
 
 
 ### Event
@@ -187,6 +186,38 @@ methods: {
 | add-cart | 点击添加到购物车时（需选择完SKU才会触发） |   selectShop：当前选择的sku数据    |
 | buy-now  | 点击立即购买时（需选择完SKU才会触发） |    selectShop：当前选择的sku数据    |
 
+## 重要说明
+### `skuArrName（sku_name_arr）`和`specListName（spec_list）`对应顺序
+```js
+// 为了方便说明，这里只展示sku_name_arr和spec_list字段
+{
+	"_id":"001",
+	"sku_list": [
+		{
+			"sku_name_arr": ["红色", "128G", "公开版"],
+		}
+	],
+	"spec_list": [
+		{
+			"name": "颜色",
+			"list": [{"name": "红色"},{"name": "黑色"},{"name": "白色"}]
+		},
+		{
+			"name": "内存",
+			"list": [{"name": "128G"},{"name": "256G"}]
+		},
+		{
+			"name": "版本",
+			"list": [{"name": "公开版"},{"name": "非公开版"}]
+		}
+	]
+}
+
+```
+#### `sku_name_arr` 数组的第一个值`sku_name_arr[0]` = `spec_list[0].list`中的任意一个元素的`name`属性的值
+#### `sku_name_arr` 数组的第二个值`sku_name_arr[1]` = `spec_list[1].list`中的任意一个元素的`name`属性的值
+#### `sku_name_arr` 数组的第三个值`sku_name_arr[2]` = `spec_list[2].list`中的任意一个元素的`name`属性的值
+#### 如`sku_name_arr[0] = "红色"`，则`spec_list[0].list`中必须要`有且只有`一个元素的`name`属性的值为`"红色"`
 
 ## uniCloud云函数路由开发框架研究Q群:`22466457` 如有问题或建议可以在群内讨论。
 ## 你也可以在评论区发布留言交流心得。

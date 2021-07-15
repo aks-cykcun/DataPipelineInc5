@@ -19,7 +19,6 @@ exports.main = async (event, context) => {
 					"goods_name": "iphone11",
 					"image": "https://img14.360buyimg.com/n0/jfs/t1/79668/22/9987/159271/5d780915Ebf9bf3f4/6a1b2703a9ed8737.jpg",
 					"price": 19800,
-					"sku_name": "红色,128G,公开版",
 					"sku_name_arr": ["红色", "128G", "公开版"],
 					"stock": 100
 				},
@@ -29,7 +28,6 @@ exports.main = async (event, context) => {
 					"goods_name": "iphone11",
 					"image": "https://img14.360buyimg.com/n0/jfs/t1/52252/35/10516/124064/5d7808e0E46202391/7100f3733a1c1f00.jpg",
 					"price": 9800,
-					"sku_name": "白色,256G,公开版",
 					"sku_name_arr": ["白色", "256G","公开版"],
 					"stock": 100
 				},
@@ -39,7 +37,6 @@ exports.main = async (event, context) => {
 					"goods_name": "iphone11",
 					"image": "https://img14.360buyimg.com/n0/jfs/t1/79668/22/9987/159271/5d780915Ebf9bf3f4/6a1b2703a9ed8737.jpg",
 					"price": 19800,
-					"sku_name": "红色,256G,公开版",
 					"sku_name_arr": ["红色","256G","公开版"],
 					"stock": 100
 				}
@@ -94,7 +91,6 @@ exports.main = async (event, context) => {
 		      "goods_name": "迪奥香水",
 		      "image": "https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
 		      "price": 19800,
-		      "sku_name": "50ml/瓶",
 		      "sku_name_arr": ["50ml/瓶"],
 		      "stock": 100
 		    },
@@ -104,7 +100,6 @@ exports.main = async (event, context) => {
 		      "goods_name": "迪奥香水",
 		      "image": "https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
 		      "price": 9800,
-		      "sku_name": "70ml/瓶",
 		      "sku_name_arr": ["70ml/瓶"],
 		      "stock": 100
 		    }
@@ -137,7 +132,6 @@ exports.main = async (event, context) => {
 		      "goods_name": "迪奥香水",
 		      "image": "https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
 		      "price": 19800,
-		      "sku_name": "默认",
 		      "sku_name_arr": ["默认"],
 		      "stock": 100
 		    }
@@ -164,7 +158,6 @@ exports.main = async (event, context) => {
 		      "goods_name": "迪奥香水",
 		      "image": "https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
 		      "price": 19800,
-		      "sku_name": "默认",
 		      "sku_name_arr": ["默认"],
 		      "stock": 0
 		    }

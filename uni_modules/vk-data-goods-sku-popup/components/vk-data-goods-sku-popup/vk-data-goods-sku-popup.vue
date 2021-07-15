@@ -205,11 +205,6 @@ export default {
 			Type: String,
 			default: "stock"
 		},
-		// sku_name的字段名
-		skuName: {
-			Type: String,
-			default: "sku_name"
-		},
 		// sku组合路径的字段名
 		skuArrName: {
 			Type: String,

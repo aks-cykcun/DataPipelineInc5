@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "pages/index/index-static"
+		},
+		{
+			"path": "pages/index/index-dynamic"
 		}
 	],
 	"globalStyle": {

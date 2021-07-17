@@ -455,7 +455,7 @@ export default {
 	mounted() {},
 	methods: {
 		// 初始化
-		init() {
+		init(notAutoClick) {
 			let that = this;
 			// 清空之前的数据
 			that.selectArr = [];
@@ -472,7 +472,7 @@ export default {
 			});
 			that.checkItem(); // 计算sku里面规格形成路径
 			that.checkInpath(-1); // 传-1是为了不跳过循环
-			that.autoClickSku(); // 自动选择sku策略
+			if(!notAutoClick) that.autoClickSku(); // 自动选择sku策略
 		},
 		// 使用vk路由模式框架获取商品信息
 		findGoodsInfo(obj = {}) {
@@ -838,6 +838,7 @@ export default {
 			let { sku: skuArr, num: selectNum } = obj;
 			let specListArr = that.goodsInfo[that.specListName];
 			if (skuArr && specListArr.length === skuArr.length) {
+				// 先清空
 				let skuClickArr = [];
 				let clickKey = true;
 				for (let index = 0; index < skuArr.length; index++) {
@@ -856,7 +857,7 @@ export default {
 					});
 				}
 				if (clickKey) {
-					that.init();
+					that.init(true);
 					skuClickArr.map(item => {
 						that.skuClick(item.spec, item.index1, item.index2);
 					});
@@ -982,7 +983,7 @@ export default {
 			handler: function(newVal, oldValue) {
 				let that = this;
 				let { goodsIdName } = that;
-				if (typeof newVal === "object" && newVal[goodsIdName] && !goodsCache[newVal[goodsIdName]]) {
+				if (typeof newVal === "object" && newVal && newVal[goodsIdName] && !goodsCache[newVal[goodsIdName]]) {
 					that.pushGoodsCache(newVal);
 				}
 			}

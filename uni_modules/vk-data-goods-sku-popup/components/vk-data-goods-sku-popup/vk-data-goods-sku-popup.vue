@@ -924,8 +924,8 @@ export default {
 		priceCom() {
 			let str = "";
 			let that = this;
-			let { selectShop = {}, goodsInfo = {}, skuListName, goodsIdName } = that;
-			if (selectShop[goodsIdName]) {
+			let { selectShop = {}, goodsInfo = {}, skuListName, skuIdName } = that;
+			if (selectShop[skuIdName]) {
 				str = that.priceFilter(selectShop.price);
 			} else {
 				let skuList = goodsInfo[skuListName];

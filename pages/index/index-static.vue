@@ -56,7 +56,7 @@
 				let res = {};
 				let name = selectShop.goods_name;
 				if(selectShop.sku_name != "默认"){
-					name += "-"+selectShop.sku_name;
+					name += "-"+selectShop.sku_name_arr;
 				}
 				res.msg = `${name} 已添加到购物车`;
 				if(typeof obj.success == "function") obj.success(res);
@@ -69,6 +69,9 @@
 					success : function(res){
 						// 实际业务时,请替换自己的加入购物车逻辑
 						that.toast(res.msg);
+						setTimeout(function() {
+							that.skuKey = false;
+						}, 300);
 					}
 				});
 			},

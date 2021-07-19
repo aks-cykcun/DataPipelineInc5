@@ -1,10 +1,10 @@
 <template>
 	<view class="app">
 		<!-- 此为全功能演示版本，新手上手建议先看 pages/index/index-static.vue 页面内的代码 -->
-		<button @click="sku_key = true">打开SKU组件</button>
+		<button @click="skuKey = true">打开SKU组件</button>
 		<vk-data-goods-sku-popup
 			ref="skuPopup"
-			v-model="sku_key" 
+			v-model="skuKey" 
 			border-radius="20" 
 			:custom-action="findGoodsInfo"
 			:mode="form.skuMode"
@@ -149,7 +149,7 @@
 		data() {
 			return {
 				goods_id:"001",
-				sku_key:false,
+				skuKey:false,
 				form:{
 					skuMode:1,
 					buyNowText:"立即购买",
@@ -196,7 +196,7 @@
 				let res = {};
 				let name = selectShop.goods_name;
 				if(selectShop.sku_name != "默认"){
-					name += "-"+selectShop.sku_name;
+					name += "-"+selectShop.sku_name_arr;
 				}
 				res.msg = `${name} 已添加到购物车`;
 				if(typeof obj.success == "function") obj.success(res);
@@ -209,6 +209,9 @@
 					success : function(res){
 						// 实际业务时,请替换自己的加入购物车逻辑
 						that.toast(res.msg);
+						setTimeout(function() {
+							that.skuKey = false;
+						}, 300);
 					}
 				});
 			},
@@ -234,6 +237,9 @@
 						useCache:useCache,
 						success(data) {
 							resolve(data.goodsInfo);
+						},
+						fail(err) {
+							reject(err);
 						}
 					});
 				});
@@ -271,31 +277,31 @@
 			// 参数配置开始 -----------------------------------------------------------
 			goodsChange(e){
 				that.goods_id = e.detail.value;
-				that.sku_key = true;
+				that.skuKey = true;
 			},
 			showCloseChange(e){
 				that.form.showClose = e.detail.value;
-				that.sku_key = true;
+				that.skuKey = true;
 			},
 			maskCloseAbleChange(e){
 				that.form.maskCloseAble = e.detail.value;
-				that.sku_key = true;
+				that.skuKey = true;
 			},
 			skuModeChange(e){
 				that.form.skuMode = e.detail.value;
-				that.sku_key = true;
+				that.skuKey = true;
 			},
 			themeChange(e){
 				that.form.theme = e.detail.value;
-				that.sku_key = true;
+				that.skuKey = true;
 			},
 			stepStrictlyChange(e){
 				that.form.stepStrictly = e.detail.value;
-				that.sku_key = true;
+				that.skuKey = true;
 			},
 			hideStockChange(e){
 				that.form.hideStock = e.detail.value;
-				that.sku_key = true;
+				that.skuKey = true;
 			},
 			// 参数配置结束 -----------------------------------------------------------
 		}

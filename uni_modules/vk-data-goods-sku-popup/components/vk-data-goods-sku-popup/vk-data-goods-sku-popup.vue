@@ -22,6 +22,7 @@
 								class="product-img"
 								:src="selectShop.image ? selectShop.image : goodsInfo[goodsThumbName]"
 								mode="aspectFill"
+								@click="previewImage"
 							></image>
 						</view>
 						<view class="specification-right">
@@ -464,7 +465,6 @@ export default {
 			that.selectNum = that.minBuyNum || 1;
 			that.outFoStock = false;
 			that.shopItemInfo = {};
-
 			let specListName = that.specListName;
 			that.goodsInfo[specListName].map(item => {
 				that.selectArr.push("");
@@ -472,7 +472,7 @@ export default {
 			});
 			that.checkItem(); // 计算sku里面规格形成路径
 			that.checkInpath(-1); // 传-1是为了不跳过循环
-			if(!notAutoClick) that.autoClickSku(); // 自动选择sku策略
+			if (!notAutoClick) that.autoClickSku(); // 自动选择sku策略
 		},
 		// 使用vk路由模式框架获取商品信息
 		findGoodsInfo(obj = {}) {
@@ -521,6 +521,9 @@ export default {
 		// 更新商品信息(库存、名称、图片)
 		updateGoodsInfo(goodsInfo) {
 			let that = this;
+			// goodsInfo.sku_list.map((item, index) => {
+			// 	item.sku_name_arr = ["20ml/瓶"];
+			// });
 			let { skuListName } = that;
 			if (
 				JSON.stringify(that.goodsInfo) === "{}" ||
@@ -550,7 +553,6 @@ export default {
 			that.openTime = new Date().getTime();
 			let findGoodsInfoRun = true;
 			let skuListName = that.skuListName;
-
 			// 先获取缓存中的商品信息
 			let useCache = false;
 			let goodsInfo = goodsCache[that.goodsId];
@@ -561,11 +563,22 @@ export default {
 				that.complete = false;
 			}
 			if (that.customAction && typeof that.customAction === "function") {
-				let goodsInfo = await that.customAction({
-					useCache,
-					goodsId: that.goodsId,
-					goodsInfo
-				});
+				goodsInfo = await that
+					.customAction({
+						useCache,
+						goodsId: that.goodsId,
+						goodsInfo,
+						close: function() {
+							setTimeout(function() {
+								that.close();
+							}, 500);
+						}
+					})
+					.catch(err => {
+						setTimeout(function() {
+							that.close();
+						}, 500);
+					});
 				// 更新缓存
 				goodsCache[that.goodsId] = goodsInfo;
 				if (goodsInfo && typeof goodsInfo == "object" && JSON.stringify(goodsInfo) != "{}") {
@@ -573,7 +586,7 @@ export default {
 					that.updateGoodsInfo(goodsInfo);
 					that.updateValue(true);
 				} else {
-					that.toast("未获取到商品信息");
+					that.toast("未获取到商品信息", "none");
 					that.$emit("input", false);
 					return false;
 				}
@@ -621,7 +634,7 @@ export default {
 			let that = this;
 			// 如果全部选完
 			if (that.selectArr.every(item => item != "")) {
-				that.selectShop = that.shopItemInfo[that.selectArr];
+				that.selectShop = that.shopItemInfo[that.getArrayToSting(that.selectArr)];
 				let stock = that.selectShop[that.stockName];
 				if (typeof stock !== "undefined" && that.selectNum > stock) {
 					that.selectNum = stock;
@@ -659,7 +672,7 @@ export default {
 					let choosed_copy2 = choosed_copy.filter(
 						item => item !== "" && typeof item !== "undefined"
 					);
-					if (that.shopItemInfo.hasOwnProperty(choosed_copy2)) {
+					if (that.shopItemInfo.hasOwnProperty(that.getArrayToSting(choosed_copy2))) {
 						specList[i].list[j].ishow = true;
 					} else {
 						specList[i].list[j].ishow = false;
@@ -697,8 +710,9 @@ export default {
 								return arr.concat(
 									arr.map(item2 => {
 										// 利用对象属性的唯一性实现二维数组去重
-										if (!that.shopItemInfo.hasOwnProperty([...item2, item])) {
-											that.shopItemInfo[[...item2, item]] = items;
+										//console.log(1,that.shopItemInfo,that.getArrayToSting([...item2, item]),item2,item,items);
+										if (!that.shopItemInfo.hasOwnProperty(that.getArrayToSting([...item2, item]))) {
+											that.shopItemInfo[that.getArrayToSting([...item2, item])] = items;
 										}
 										return [...item2, item];
 									})
@@ -711,6 +725,18 @@ export default {
 				[[]]
 			);
 			// console.timeEnd('计算有多小种可选路径需要的时间是');
+		},
+		getArrayToSting(arr) {
+			let str = "";
+			arr.map((item, index) => {
+				item = item.replace(/\./g, "。");
+				if (index == 0) {
+					str += item;
+				} else {
+					str += "," + item;
+				}
+			});
+			return str;
 		},
 		// 检测sku选项是否已全部选完,且有库存
 		checkSelectComplete(obj = {}) {
@@ -743,9 +769,9 @@ export default {
 				success: function(selectShop) {
 					selectShop.buy_num = that.selectNum;
 					that.$emit("add-cart", selectShop);
-					setTimeout(function() {
-						that.init();
-					}, 300);
+					// setTimeout(function() {
+					// 	that.init();
+					// }, 300);
 				}
 			});
 		},
@@ -878,7 +904,18 @@ export default {
 			goodsCache[goodsInfo[goodsIdName]] = goodsInfo;
 		},
 		// 用于阻止冒泡
-		stop() {}
+		stop() {},
+		// 图片预览
+		previewImage() {
+			let that = this;
+			let { selectShop, goodsInfo, goodsThumbName } = that;
+			let src = selectShop.image ? selectShop.image : goodsInfo[goodsThumbName];
+			if (src) {
+				uni.previewImage({
+					urls: [src]
+				});
+			}
+		}
 	},
 	// 过滤器
 	filters: {
@@ -983,7 +1020,12 @@ export default {
 			handler: function(newVal, oldValue) {
 				let that = this;
 				let { goodsIdName } = that;
-				if (typeof newVal === "object" && newVal && newVal[goodsIdName] && !goodsCache[newVal[goodsIdName]]) {
+				if (
+					typeof newVal === "object" &&
+					newVal &&
+					newVal[goodsIdName] &&
+					!goodsCache[newVal[goodsIdName]]
+				) {
 					that.pushGoodsCache(newVal);
 				}
 			}

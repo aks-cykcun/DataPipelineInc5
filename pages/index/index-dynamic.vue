@@ -1,12 +1,12 @@
 <template>
 	<view class="app">
 		<!-- 此为全功能演示版本，新手上手建议先看 pages/index/index-static.vue 页面内的代码 -->
-		<button @click="skuKey = true">打开SKU组件</button>
+		<button @click="openSkuPopup();">打开SKU组件</button>
 		<vk-data-goods-sku-popup
 			ref="skuPopup"
 			v-model="skuKey" 
 			border-radius="20" 
-			:custom-action="findGoodsInfo"
+			:localdata="goodsInfo"
 			:mode="form.skuMode"
 			:buy-now-text="form.buyNowText"
 			:add-cart-text="form.addCartText"
@@ -20,8 +20,8 @@
 			:hide-stock="form.hideStock"
 			:theme="form.theme"
 			:default-select="form.defaultSelect"
-			@open="openSkuPopup"
-			@close="closeSkuPopup"
+			@open="onOpenSkuPopup"
+			@close="onCloseSkuPopup"
 			@add-cart="addCart"
 			@buy-now="buyNow"
 		></vk-data-goods-sku-popup>
@@ -144,7 +144,7 @@
 
 <script>
 	var that;											// 当前页面对象
-	var app = getApp();						// 可获取全局配置
+	var goodsCache = {};
 	export default {
 		data() {
 			return {
@@ -165,7 +165,8 @@
 					// 	sku:["红色","256G","公开版"],
 					// 	num:5
 					// }
-				}
+				},
+				goodsInfo:{}
 			}
 		},
 		// 监听 - 页面每次【加载时】执行(如：前进)
@@ -178,15 +179,34 @@
 			init(options = {}){
 				
 			},
-			// sku组件 开始-----------------------------------------------------------
+      // 获取商品信息，并打开sku弹出
 			openSkuPopup(){
+				let useCache = false;
+				if(goodsCache[that.goods_id]){
+					// 使用缓存加快第二次渲染速度
+					useCache = true;
+					that.goodsInfo = goodsCache[that.goods_id];
+					that.skuKey = true;
+				}
+				// 即使使用了缓存,也还要再获取下商品信息,因为需要实时显示最新的库存
+				that.callFunction({
+					useCache,
+					success(data) {
+						that.goodsInfo = data.goodsInfo;
+						goodsCache[that.goods_id] = data.goodsInfo;
+						that.skuKey = true;
+					}
+				});
+			},
+			// sku组件 开始-----------------------------------------------------------
+			onOpenSkuPopup(){
 				console.log("监听 - 打开sku组件");
 				// that.$refs.skuPopup.selectSku({
 				// 	sku:["白色","256G","公开版"],
 				// 	num:5
 				// });
 			},
-			closeSkuPopup(){
+			onCloseSkuPopup(){
 				console.log("监听 - 关闭sku组件");
 			},
 			// 加入购物车前的判断
@@ -226,24 +246,6 @@
 					}
 				});
 			},
-			/**
-			 * 获取商品信息
-			 * 这里可以看到每次打开SKU都会去重新请求商品信息,为的是每次打开SKU组件可以实时看到剩余库存
-			 */
-			findGoodsInfo(obj){
-				let { useCache } = obj;
-				return new Promise(function (resolve, reject) {
-					that.callFunction({
-						useCache:useCache,
-						success(data) {
-							resolve(data.goodsInfo);
-						},
-						fail(err) {
-							reject(err);
-						}
-					});
-				});
-			},
 			toast(msg){
 				uni.showToast({
 				    title: msg,
@@ -264,6 +266,7 @@
 					},
 					success(res){
 						console.log(res);
+						goodsCache[that.goods_id] = res.result.goodsInfo;
 						if(typeof success == "function") success(res.result);
 					},
 					fail(err){

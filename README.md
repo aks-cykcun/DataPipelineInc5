@@ -1,8 +1,6 @@
-
 ### 插件名称：`vk-data-goods-sku-popup`
 ### 插件类型：`业务型数据驱动组件`
 ### 作者：`VK`
-### 更新时间：`2021-03-20`
 ##### 此插件为`vk-unicloud-router`插件的一部分独立出来而形成的。
 ##### uniCloud云函数路由开发框架研究Q群:`22466457` 如有问题或建议可以在群内讨论。
 
@@ -44,97 +42,162 @@ datacom，全称是data components，数据驱动的组件。
 #####  2、通过下面的基本使用示例的方式使用组件，API文档 在最下面
 
 #### 基本使用示例
-```html
-<vk-data-goods-sku-popup
-  v-model="sku_key" 
-  :custom-action="findGoodsInfo"
-  :mode="1"	
-  border-radius="20"
-  @add-cart="addCart"
-  @buy-now="buyNow"
-></vk-data-goods-sku-popup>
-```
 
-```js
-methods: {
-  // 加入购物车前的判断
-  addCartFn(obj) {
-    let {
-      selectShop
-    } = obj;
-    // 模拟添加到购物车,请替换成你自己的添加到购物车逻辑
-    let res = {};
-    let name = selectShop.goods_name;
-    if (selectShop.sku_name != "默认") {
-      name += "-" + selectShop.sku_name;
-    }
-    res.msg = `$ {name}已添加到购物车`;
-    if (typeof obj.success == "function") obj.success(res);
-  },
-  // 加入购物车按钮
-  addCart(selectShop) {
-    console.log("监听 - 加入购物车");
-    that.addCartFn({
-      selectShop: selectShop,
-      success: function(res) {
-        // 实际业务时,请替换自己的加入购物车逻辑
-        that.toast(res.msg);
+```html
+<!-- 静态数据演示版本 适合任何后端 -->
+<template>
+  <view class="app">
+    <button @click="openSkuPopup()">打开SKU组件</button>
+    
+    <vk-data-goods-sku-popup
+      ref="skuPopup"
+      v-model="skuKey" 
+      border-radius="20" 
+      :localdata="goodsInfo"
+      :mode="skuMode"
+      @open="onOpenSkuPopup"
+      @close="onCloseSkuPopup"
+      @add-cart="addCart"
+      @buy-now="buyNow"
+    ></vk-data-goods-sku-popup>
+    
+  </view>
+</template>
+
+<script>
+  var that;											// 当前页面对象
+  export default {
+    data() {
+      return {
+        // 是否打开SKU弹窗
+        skuKey:false,
+        // SKU弹窗模式
+        skuMode:1,
+        // 后端返回的商品信息
+        goodsInfo:{}
       }
-    });
-  },
-  // 立即购买
-  buyNow(selectShop) {
-    console.log("监听 - 立即购买");
-    that.addCartFn({
-      selectShop: selectShop,
-      success: function(res) {
-        // 实际业务时,请替换自己的立即购买逻辑
-        that.toast("立即购买");
-      }
-    });
-  },
-  /**
-   * 获取商品信息
-   * 这里可以看到每次打开SKU都会去重新请求商品信息,为的是每次打开SKU组件可以实时看到剩余库存
-   */
-  findGoodsInfo() {
-    return new Promise(function(resolve, reject) {
-      // 这里是获取商品信息的后端请求,可以用你自己的方式请求获取,本例子中用的是unicloud的云函数获取商品信息
-      that.callFunction({
-        success(data) {
-          resolve(data.goodsInfo);
+    },
+    // 监听 - 页面每次【加载时】执行(如：前进)
+    onLoad(options) {
+      that = this;
+      that.init(options);
+    },
+    methods: {
+      // 初始化
+      init(options = {}){
+        
+      },
+      // 获取商品信息，并打开sku弹出
+      openSkuPopup(){
+        /**
+         * 获取商品信息
+         * 这里可以看到每次打开SKU都会去重新请求商品信息,为的是每次打开SKU组件可以实时看到剩余库存
+         */
+        // 此处写接口请求，并将返回的数据进行处理成goodsInfo的数据格式，
+        // goodsInfo是后端返回的数据
+        that.goodsInfo = {
+          "_id":"002",
+          "name": "迪奥香水",
+          "goods_thumb":"https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
+          "sku_list": [
+            {
+              "_id": "004",
+              "goods_id": "002",
+              "goods_name": "迪奥香水",
+              "image": "https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
+              "price": 19800,
+              "sku_name_arr": ["50ml/瓶"],
+              "stock": 100
+            },
+            {
+              "_id": "005",
+              "goods_id": "002",
+              "goods_name": "迪奥香水",
+              "image": "https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
+              "price": 9800,
+              "sku_name_arr": ["70ml/瓶"],
+              "stock": 100
+            }
+          ],
+          "spec_list": [
+            {
+              "list": [
+                {
+                  "name": "20ml/瓶"
+                },
+                {
+                  "name": "50ml/瓶"
+                },
+                {
+                  "name": "70ml/瓶"
+                }
+              ],
+              "name": "规格"
+            }
+          ]
         }
-      });
-    });
-  },
-  toast(msg) {
-    uni.showToast({
-      title: msg,
-      icon: "none"
-    });
-  },
-  callFunction(obj) {
-    uni.showLoading({
-      title: '请求中'
-    });
-    uniCloud.callFunction({
-      name: 'findGoodsInfo',
-      data: {
-        goods_id: that.goods_id
+        that.skuKey = true;
       },
-      success(res) {
-        console.log(res);
-        if (typeof obj.success == "function") obj.success(res.result);
+      // sku组件 开始-----------------------------------------------------------
+      onOpenSkuPopup(){
+        console.log("监听 - 打开sku组件");
       },
-      fail(err) {
-        console.error(err);
+      onCloseSkuPopup(){
+        console.log("监听 - 关闭sku组件");
       },
-      complete() {
-        uni.hideLoading();
+      // 加入购物车前的判断
+      addCartFn(obj){
+        let { selectShop } = obj;
+        // 模拟添加到购物车,请替换成你自己的添加到购物车逻辑
+        let res = {};
+        let name = selectShop.goods_name;
+        if(selectShop.sku_name != "默认"){
+          name += "-"+selectShop.sku_name_arr;
+        }
+        res.msg = `${name} 已添加到购物车`;
+        if(typeof obj.success == "function") obj.success(res);
+      },
+      // 加入购物车按钮
+      addCart(selectShop){
+        console.log("监听 - 加入购物车");
+        that.addCartFn({
+          selectShop : selectShop,
+          success : function(res){
+            // 实际业务时,请替换自己的加入购物车逻辑
+            that.toast(res.msg);
+            setTimeout(function() {
+              that.skuKey = false;
+            }, 300);
+          }
+        });
+      },
+      // 立即购买
+      buyNow(selectShop){
+        console.log("监听 - 立即购买");
+        that.addCartFn({
+          selectShop : selectShop,
+          success : function(res){
+            // 实际业务时,请替换自己的立即购买逻辑
+            that.toast("立即购买");
+          }
+        });
+      },
+      toast(msg){
+        uni.showToast({
+          title: msg,
+          icon:"none"
+        });
       }
-    });
-  },
-}
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  .app {
+    padding: 30rpx;
+    font-size: 28rpx;
+  }
+</style>
 ```
 
 ## API
@@ -144,21 +207,22 @@ methods: {
 | 参数                   | 说明                                                | 类型      | 默认值    | 可选值        |
 |------------------------|----------------------------------------------------|---------|--------|------------|
 | v-mode                 | 双向绑定，true为打开组件，false为关闭组件             | Boolean | false  | true、false |
-| no-stock-text            | 该商品已抢完时的按钮文字                              | String  | 该商品已抢完 | -          |
-| stock-text              | 库存文字                                            | String | 库存           | - |
+| no-stock-text          | 该商品已抢完时的按钮文字                              | String  | 该商品已抢完 | -          |
+| stock-text             | 库存文字                                            | String | 库存           | - |
 | mode                   | 模式 1:都显示  2:只显示购物车 3:只显示立即购买        | Number          | 1           | 1、2、3      |
-| mask-close-able          | 点击遮罩是否关闭组件 true 关闭 false 不关闭 默认true  | Boolean         | true        | true、false |
-| border-radius           | 顶部圆角值                                          | [String,Number] | 0           | -          |
-| min-buy-num              | 最小购买数量                                        | Number          | 1           | -          |
-| max-buy-num              | 最大购买数量                                        | Number          | 100000      | -          |
-| step-buy-num             | 每次点击后的数量                                     | Number    
-| step-strictly（v1.1）           | 是否只能输入 step 的倍数                             | Boolean      | false           | true、false          |
-| hide-stock（v1.1）              | 是否隐藏库存的显示                             | Boolean      | false           | true、false          |
-| theme（v1.1.1）              | 主题风格                             | String      | default     | default、red-black、black-white、coffee、green  |
-| custom-action           | 自定义获取商品信息的函数                              | Function        | null        | -          |
-| show-close              | 是否显示右上角关闭按钮                                | Boolean | true | true、false |
-| close-image             | 关闭按钮的图片地址                                    | String  | -    | -             |
-| price-color             | 价格的字体颜色                                        | String          | #fe560a     | -          |
+| mask-close-able        | 点击遮罩是否关闭组件 true 关闭 false 不关闭 默认true  | Boolean         | true        | true、false |
+| border-radius          | 顶部圆角值                                          | [String,Number] | 0           | -          |
+| min-buy-num            | 最小购买数量                                        | Number          | 1           | -          |
+| max-buy-num            | 最大购买数量                                        | Number          | 100000      | -          |
+| step-buy-num           | 每次点击后的数量                                     | Number    
+| step-strictly（v1.1）  | 是否只能输入 step 的倍数                             | Boolean      | false           | true、false          |
+| hide-stock（v1.1）     | 是否隐藏库存的显示                             | Boolean      | false           | true、false          |
+| theme（v1.1.1）        | 主题风格                             | String      | default     | default、red-black、black-white、coffee、green  |
+| localdata（v1.3.0）    | 商品信息本地数据源                | Object      | -     | - |
+| custom-action          | 自定义获取商品信息的函数（已知支付宝不支持，支付宝请改用localdata属性）                              | Function        | null        | -          |
+| show-close             | 是否显示右上角关闭按钮                                | Boolean | true | true、false |
+| close-image            | 关闭按钮的图片地址                                    | String  | -    | -             |
+| price-color            | 价格的字体颜色                                        | String          | #fe560a     | -          |
 | buy-now-text             | 立即购买 - 按钮的文字                      | String | 立即购买    | - |
 | buy-now-color            | 立即购买 - 按钮的字体颜色                  | String | #ffffff | - |
 | buy-now-background-color  | 立即购买 - 按钮的背景颜色                  | String | #fe560a | - |

@@ -256,10 +256,14 @@ export default {
 			Type: Boolean,
 			default: false
 		},
-		// 自定义获取商品信息的函数
+		// 自定义获取商品信息的函数,支付宝小程序不支持该属性,请使用localdata属性
 		customAction: {
 			Type: [Function],
 			default: null
+		},
+		// 本地数据源
+		localdata: {
+			type: Object
 		},
 		// 价格的字体颜色
 		priceColor: {
@@ -563,24 +567,46 @@ export default {
 				that.complete = false;
 			}
 			if (that.customAction && typeof that.customAction === "function") {
-				goodsInfo = await that
-					.customAction({
-						useCache,
-						goodsId: that.goodsId,
-						goodsInfo,
-						close: function() {
+				try {
+					goodsInfo = await that
+						.customAction({
+							useCache,
+							goodsId: that.goodsId,
+							goodsInfo,
+							close: function() {
+								setTimeout(function() {
+									that.close();
+								}, 500);
+							}
+						})
+						.catch(err => {
 							setTimeout(function() {
 								that.close();
 							}, 500);
-						}
-					})
-					.catch(err => {
+						});
+				} catch (err) {
+					let { message = "" } = err;
+					if (message.indexOf(".catch is not a function") > -1) {
+						that.toast("custom-action必须返回一个Promise", "none");
 						setTimeout(function() {
 							that.close();
 						}, 500);
-					});
+						return false;
+					}
+				}
 				// 更新缓存
 				goodsCache[that.goodsId] = goodsInfo;
+				if (goodsInfo && typeof goodsInfo == "object" && JSON.stringify(goodsInfo) != "{}") {
+					findGoodsInfoRun = false;
+					that.updateGoodsInfo(goodsInfo);
+					that.updateValue(true);
+				} else {
+					that.toast("未获取到商品信息", "none");
+					that.$emit("input", false);
+					return false;
+				}
+			} else if (typeof that.localdata !== "undefined") {
+				goodsInfo = that.localdata;
 				if (goodsInfo && typeof goodsInfo == "object" && JSON.stringify(goodsInfo) != "{}") {
 					findGoodsInfoRun = false;
 					that.updateGoodsInfo(goodsInfo);

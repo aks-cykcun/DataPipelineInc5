@@ -200,6 +200,33 @@ datacom，全称是data components，数据驱动的组件。
 </style>
 ```
 
+### 如何使用缓存加快第二次渲染速度
+```js
+// 获取商品信息，并打开sku弹出
+openSkuPopup(){
+  let useCache = false;
+  // goodsCache 可以在 <script> 标签下方 同时在 export default { 标签上方 的位置出写 var goodsCache = {};
+  if(goodsCache[that.goods_id]){
+    // 使用缓存加快第二次渲染速度
+    useCache = true;
+    that.goodsInfo = goodsCache[that.goods_id];
+    that.skuKey = true;
+  }
+  // 即使使用了缓存,也还要再获取下商品信息,因为需要实时显示最新的库存
+  // 请求后端
+  that.callFunction({
+    useCache,
+    success(data) {
+      // 设置本地数据源
+      that.goodsInfo = data.goodsInfo;
+      // 设置缓存
+      goodsCache[that.goods_id] = data.goodsInfo;
+      // 打开sku弹窗
+      that.skuKey = true;
+    }
+  });
+}
+```
 ## API
 
 ### Props

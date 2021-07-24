@@ -605,7 +605,7 @@ export default {
 					that.$emit("input", false);
 					return false;
 				}
-			} else if (typeof that.localdata !== "undefined") {
+			} else if (typeof that.localdata !== "undefined" && that.localdata !== null) {
 				goodsInfo = that.localdata;
 				if (goodsInfo && typeof goodsInfo == "object" && JSON.stringify(goodsInfo) != "{}") {
 					findGoodsInfoRun = false;

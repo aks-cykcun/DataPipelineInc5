@@ -147,32 +147,32 @@ exports.main = async (event, context) => {
 		    }
 		  ]
 		},
-		{
-			"_id":"004",
-		  "name": "迪奥香水",
-			"goods_thumb":"https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
-		  "sku_list": [
-		    {
-		      "_id": "006",
-		      "goods_id": "003",
-		      "goods_name": "迪奥香水",
-		      "image": "https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
-		      "price": 19800,
-		      "sku_name_arr": ["默认"],
-		      "stock": 0
-		    }
-		  ],
-		  "spec_list": [
-		    {
-		      "list": [
-		        {
-		          "name": "默认"
-		        }
-		      ],
-		      "name": "默认"
-		    }
-		  ]
-		}
+    {
+      "_id":"004",
+      "name": "迪奥香水",
+      "goods_thumb":"https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
+      "sku_list": [
+        {
+          "_id": "006",
+          "goods_id": "003",
+          "goods_name": "迪奥香水",
+          "image": "https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
+          "price": 19800,
+          "sku_name_arr": ["默认"],
+          "stock": 0
+        }
+      ],
+      "spec_list": [
+        {
+          "list": [
+            {
+              "name": "默认"
+            }
+          ],
+          "name": "默认"
+        }
+      ]
+    }
 	];
 	res.goodsInfo = getListItem(goodsDB, "_id",goods_id);
 	return res

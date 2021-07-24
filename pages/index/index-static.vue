@@ -41,7 +41,7 @@
       init(options = {}){
         
       },
-      // 获取商品信息，并打开sku弹出
+      // 获取商品信息，并打开sku弹窗
       openSkuPopup(){
         /**
          * 获取商品信息

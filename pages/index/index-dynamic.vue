@@ -179,7 +179,7 @@
 			init(options = {}){
 				
 			},
-      // 获取商品信息，并打开sku弹出
+      // 获取商品信息，并打开sku弹窗
 			openSkuPopup(){
 				let useCache = false;
 				if(goodsCache[that.goods_id]){
@@ -194,7 +194,7 @@
 					success(data) {
 						that.goodsInfo = data.goodsInfo;
 						goodsCache[that.goods_id] = data.goodsInfo;
-						that.skuKey = true;
+            if(!useCache) that.skuKey = true;
 					}
 				});
 			},

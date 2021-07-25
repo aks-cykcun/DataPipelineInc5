@@ -2,7 +2,7 @@
 	<view
 		class="vk-data-goods-sku-popup popup"
 		catchtouchmove="true"
-		:class="value && complete ? 'show' : 'none'"
+		:class="getValue() && complete ? 'show' : 'none'"
 		@touchmove.stop.prevent="moveHandle"
 		@click.stop="stop"
 	>
@@ -65,7 +65,7 @@
 										item_value.ishow ? themeColorFn('btnStyle') : '',
 										subIndex[index1] == index2 ? themeColorFn('activedStyle') : ''
 									]"
-									@tap="skuClick(item_value, index1, index2)"
+									@click="skuClick(item_value, index1, index2)"
 								>
 									{{ item_value.name }}
 								</view>
@@ -153,9 +153,14 @@ var vk; // vk依赖
 var goodsCache = {}; // 本地商品缓存
 export default {
 	name: "vk-data-goods-sku-popup",
+	emits: ["update:modelValue", "input", "update-goods", "open", "close", "add-cart", "buy-now"],
 	props: {
 		// true 组件显示 false 组件隐藏
 		value: {
+			Type: Boolean,
+			default: false
+		},
+		modelValue: {
 			Type: Boolean,
 			default: false
 		},
@@ -453,7 +458,7 @@ export default {
 	created() {
 		let that = this;
 		vk = that.vk;
-		if (that.value) {
+		if (that.getValue()) {
 			that.open();
 		}
 	},
@@ -477,6 +482,15 @@ export default {
 			that.checkItem(); // 计算sku里面规格形成路径
 			that.checkInpath(-1); // 传-1是为了不跳过循环
 			if (!notAutoClick) that.autoClickSku(); // 自动选择sku策略
+		},
+		getValue(){
+			// #ifndef VUE3
+			return this.value;
+			// #endif
+			
+			// #ifdef VUE3
+			return this.modelValue;
+			// #endif
 		},
 		// 使用vk路由模式框架获取商品信息
 		findGoodsInfo(obj = {}) {
@@ -517,9 +531,11 @@ export default {
 			if (value) {
 				that.$emit("open", true);
 				that.$emit("input", true);
+				that.$emit("update:modelValue", true);
 			} else {
 				that.$emit("input", false);
 				that.$emit("close", "close");
+				that.$emit("update:modelValue", false);
 			}
 		},
 		// 更新商品信息(库存、名称、图片)
@@ -630,10 +646,12 @@ export default {
 				if (that.maskCloseAble !== false) {
 					that.$emit("input", false);
 					that.$emit("close", "mask");
+					that.$emit("update:modelValue", false);
 				}
 			} else {
 				that.$emit("input", false);
 				that.$emit("close", "close");
+				that.$emit("update:modelValue", false);
 			}
 		},
 		moveHandle() {
@@ -1041,6 +1059,12 @@ export default {
 				that.open();
 			}
 		},
+		modelValue(newVal, oldValue) {
+			let that = this;
+			if (newVal) {
+				that.open();
+			}
+		},
 		defaultGoods: {
 			immediate: true,
 			handler: function(newVal, oldValue) {
@@ -1068,7 +1092,7 @@ export default {
 	top: 0;
 	right: 0;
 	bottom: 0;
-	z-index: 1000;
+	z-index: 990;
 	overflow: hidden;
 	&.show {
 		display: block;

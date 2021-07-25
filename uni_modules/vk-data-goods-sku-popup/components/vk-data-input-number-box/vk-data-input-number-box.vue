@@ -9,7 +9,7 @@
 				fontSize: size + 'rpx',
 				minHeight: '1.4em'
 			}">
-			<view :style="'font-size:'+(Number(size)+10)+'rpx'" class="num-btn">-</view>
+			<view :style="'font-size:'+(Number(size)+10)+'rpx'" class="num-btn">－</view>
 		</view>
 		<input :disabled="disabledInput || disabled" :cursor-spacing="getCursorSpacing" :class="{ 'u-input-disabled': disabled }"
 		    v-model="inputVal" class="u-number-input" @blur="onBlur"

@@ -356,7 +356,16 @@ export default {
 		 */
 		defaultGoods: {
 			Type: Object
-		}
+		},
+    /**
+     * 金额是否需要除以100
+     * 1:金额会除以100
+     * 0:金额不会除以100
+     */
+    amountType: {
+			Type: Number,
+			default: 1
+		},
 	},
 	data() {
 		return {
@@ -940,7 +949,11 @@ export default {
 			if (typeof n == "string") {
 				n = parseFloat(n);
 			}
-			return (n / 100).toFixed(2);
+      if (that.amountType === 0){
+        return n.toFixed(2);
+      }else {
+        return (n / 100).toFixed(2);
+      }
 		},
 		pushGoodsCache(goodsInfo) {
 			let that = this;
@@ -959,16 +972,6 @@ export default {
 					urls: [src]
 				});
 			}
-		}
-	},
-	// 过滤器
-	filters: {
-		// 金额显示过滤器
-		priceFilter(n = 0) {
-			if (typeof n == "string") {
-				n = parseFloat(n);
-			}
-			return (n / 100).toFixed(2);
 		}
 	},
 	// 计算属性

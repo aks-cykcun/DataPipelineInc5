@@ -62,7 +62,7 @@
 	 */
 	export default {
 		name: "vk-data-input-number-box",
-		emits: ["update:modelValue", "input", "plus", "change", "minus"],
+		emits: ["update:modelValue", "input", "change", "blur", "plus", "minus"],
 		props: {
 			// 预显示的数字
 			value: {

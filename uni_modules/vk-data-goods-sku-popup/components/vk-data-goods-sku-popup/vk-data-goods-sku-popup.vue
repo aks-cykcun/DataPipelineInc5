@@ -496,7 +496,7 @@ export default {
 			// #ifndef VUE3
 			return this.value;
 			// #endif
-			
+
 			// #ifdef VUE3
 			return this.modelValue;
 			// #endif
@@ -1053,7 +1053,7 @@ export default {
 				}
 			}
 			return str;
-		}
+		},
 	},
 	watch: {
 		value(newVal, oldValue) {
@@ -1106,6 +1106,7 @@ export default {
 
 		.layer {
 			animation: showLayer 0.2s linear both;
+			bottom:var(--window-bottom);
 		}
 	}
 
@@ -1244,6 +1245,7 @@ export default {
 								background-color: #ffffff;
 								color: #333333;
 								margin-right: 20rpx;
+                margin-bottom: 16rpx;
 								border: 1px solid #f4f4f4;
 								box-sizing: border-box;
 								&.actived {

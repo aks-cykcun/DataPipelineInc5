@@ -366,6 +366,11 @@ export default {
 			Type: Number,
 			default: 1
 		},
+    // 每次选择完SKU后，购买数量归1，如果有最小购买数量，则设置为最小购买数量
+    selectedInit: {
+    	Type: Boolean,
+    	default: false
+    },
 	},
 	data() {
 		return {
@@ -698,7 +703,9 @@ export default {
 				if (that.selectNum < that.minBuyNum) {
 					that.selectNum = that.minBuyNum;
 				}
-				//that.selectNum = that.minBuyNum || 1;
+        if (that.selectedInit){
+          that.selectNum = that.minBuyNum || 1;
+        }
 			} else {
 				that.selectShop = {};
 			}

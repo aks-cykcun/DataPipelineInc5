@@ -9,6 +9,7 @@
       border-radius="20" 
       :localdata="goodsInfo"
       :mode="skuMode"
+      :selected-init="true"
       @open="onOpenSkuPopup"
       @close="onCloseSkuPopup"
       @add-cart="addCart"

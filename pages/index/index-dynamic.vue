@@ -20,6 +20,7 @@
 			:hide-stock="form.hideStock"
 			:theme="form.theme"
 			:default-select="form.defaultSelect"
+      :selected-init="form.selectedInit"
 			@open="onOpenSkuPopup"
 			@close="onCloseSkuPopup"
 			@add-cart="addCart"
@@ -160,6 +161,7 @@
 					stepBuyNum:1,
 					stepStrictly:false,
 					hideStock:false,
+          selectedInit:true,
 					theme:"default", // 主题
 					// defaultSelect:{
 					// 	sku:["红色","256G","公开版"],

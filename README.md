@@ -246,6 +246,7 @@ openSkuPopup(){
 | hide-stock（v1.1）     | 是否隐藏库存的显示                             | Boolean      | false           | true、false          |
 | theme（v1.1.1）        | 主题风格                             | String      | default     | default、red-black、black-white、coffee、green  |
 | localdata（v1.3.0）    | 商品信息本地数据源                | Object      | -     | - |
+| amount-type            | 默认金额会除以100（即100=1元），若设置为0，则不会除以100（即1=1元）   | Number  | 1    | 0             |
 | custom-action          | 自定义获取商品信息的函数（已知支付宝不支持，支付宝请改用localdata属性）                              | Function        | null        | -          |
 | show-close             | 是否显示右上角关闭按钮                                | Boolean | true | true、false |
 | close-image            | 关闭按钮的图片地址                                    | String  | -    | -             |
@@ -256,6 +257,7 @@ openSkuPopup(){
 | add-cart-text            | 加入购物车 - 按钮的文字                    | String | 加入购物车   | - |
 | add-cart-color           | 加入购物车 - 按钮的字体颜色                | String | #ffffff | - |
 | add-cart-background-color | 加入购物车 - 按钮的背景颜色                 | String | #ff9402 | - |
+| goods-thumb-background-color         | 商品缩略图背景颜色                  | String          | - | -          |
 | disable-style           | 样式 - 不可点击时,按钮的样式  | Object | null    | - |
 | actived-style           | 样式 - 按钮点击时的样式     | Object | null    | - |
 | btn-style               | 样式 - 按钮常态的样式      | Object | null    | - |

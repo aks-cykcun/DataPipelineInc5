@@ -21,6 +21,9 @@
 							<image
 								class="product-img"
 								:src="selectShop.image ? selectShop.image : goodsInfo[goodsThumbName]"
+                :style="{
+                  backgroundColor: goodsThumbBackgroundColor
+                }"
 								mode="aspectFill"
 								@click="previewImage"
 							></image>
@@ -241,6 +244,11 @@ export default {
 			Type: [String],
 			default: "goods_thumb"
 		},
+    // 商品缩略图背景颜色，如#999999
+    goodsThumbBackgroundColor: {
+      Type: String,
+    	default: "transparent"
+    },
 		// 最小购买数量 默认 1
 		minBuyNum: {
 			Type: [Number, String],
@@ -1179,7 +1187,6 @@ export default {
 						.product-img {
 							width: 180rpx;
 							height: 180rpx;
-							background-color: #999999;
 						}
 					}
 

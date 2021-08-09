@@ -21,9 +21,9 @@
 							<image
 								class="product-img"
 								:src="selectShop.image ? selectShop.image : goodsInfo[goodsThumbName]"
-                :style="{
-                  backgroundColor: goodsThumbBackgroundColor
-                }"
+								:style="{
+									backgroundColor: goodsThumbBackgroundColor
+								}"
 								mode="aspectFill"
 								@click="previewImage"
 							></image>
@@ -244,11 +244,11 @@ export default {
 			Type: [String],
 			default: "goods_thumb"
 		},
-    // 商品缩略图背景颜色，如#999999
-    goodsThumbBackgroundColor: {
-      Type: String,
-    	default: "transparent"
-    },
+		// 商品缩略图背景颜色，如#999999
+		goodsThumbBackgroundColor: {
+			Type: String,
+			default: "transparent"
+		},
 		// 最小购买数量 默认 1
 		minBuyNum: {
 			Type: [Number, String],
@@ -365,20 +365,20 @@ export default {
 		defaultGoods: {
 			Type: Object
 		},
-    /**
-     * 金额是否需要除以100
-     * 1:金额会除以100
-     * 0:金额不会除以100
-     */
-    amountType: {
+		/**
+		 * 金额是否需要除以100
+		 * 1:金额会除以100
+		 * 0:金额不会除以100
+		 */
+		amountType: {
 			Type: Number,
 			default: 1
 		},
-    // 每次选择完SKU后，购买数量归1，如果有最小购买数量，则设置为最小购买数量
-    selectedInit: {
-    	Type: Boolean,
-    	default: false
-    },
+		// 每次选择完SKU后，购买数量归1，如果有最小购买数量，则设置为最小购买数量
+		selectedInit: {
+			Type: Boolean,
+			default: false
+		},
 	},
 	data() {
 		return {
@@ -711,9 +711,9 @@ export default {
 				if (that.selectNum < that.minBuyNum) {
 					that.selectNum = that.minBuyNum;
 				}
-        if (that.selectedInit){
-          that.selectNum = that.minBuyNum || 1;
-        }
+				if (that.selectedInit){
+					that.selectNum = that.minBuyNum || 1;
+				}
 			} else {
 				that.selectShop = {};
 			}
@@ -964,11 +964,11 @@ export default {
 			if (typeof n == "string") {
 				n = parseFloat(n);
 			}
-      if (that.amountType === 0){
-        return n.toFixed(2);
-      }else {
-        return (n / 100).toFixed(2);
-      }
+			if (that.amountType === 0){
+				return n.toFixed(2);
+			}else {
+				return (n / 100).toFixed(2);
+			}
 		},
 		pushGoodsCache(goodsInfo) {
 			let that = this;
@@ -1259,7 +1259,7 @@ export default {
 								background-color: #ffffff;
 								color: #333333;
 								margin-right: 20rpx;
-                margin-bottom: 16rpx;
+								margin-bottom: 16rpx;
 								border: 1px solid #f4f4f4;
 								box-sizing: border-box;
 								&.actived {

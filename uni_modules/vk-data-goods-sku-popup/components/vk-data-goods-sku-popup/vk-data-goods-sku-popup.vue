@@ -1,6 +1,6 @@
 <template>
 	<view
-		class="vk-data-goods-sku-popup popup"
+		class="vk-data-goods-sku-popup"
 		catchtouchmove="true"
 		:class="getValue() && complete ? 'show' : 'none'"
 		@touchmove.stop.prevent="moveHandle"

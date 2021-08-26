@@ -222,12 +222,12 @@
 				if(selectShop.sku_name != "默认"){
 					name += "-"+selectShop.sku_name_arr;
 				}
-				res.msg = `${name} 已添加到购物车`;
+				res.msg = `${name} * ${selectShop.buy_num} 已添加到购物车`;
 				if(typeof obj.success == "function") obj.success(res);
 			},
 			// 加入购物车按钮
 			addCart(selectShop){
-				console.log("监听 - 加入购物车");
+				console.log("监听 - 加入购物车", selectShop);
 				that.addCartFn({
 					selectShop : selectShop,
 					success : function(res){
@@ -241,7 +241,7 @@
 			},
 			// 立即购买
 			buyNow(selectShop){
-				console.log("监听 - 立即购买");
+				console.log("监听 - 立即购买", selectShop);
 				that.addCartFn({
 					selectShop : selectShop,
 					success : function(res){

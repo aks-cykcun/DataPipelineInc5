@@ -62,7 +62,7 @@
 							"image": "https://img14.360buyimg.com/n0/jfs/t1/79668/22/9987/159271/5d780915Ebf9bf3f4/6a1b2703a9ed8737.jpg",
 							"price": 19800,
 							"sku_name_arr": ["红色", "128G", "公开版"],
-							"stock": 100
+							"stock": 1000
 						},
 						{
 							"_id": "002",
@@ -80,7 +80,7 @@
 							"image": "https://img14.360buyimg.com/n0/jfs/t1/79668/22/9987/159271/5d780915Ebf9bf3f4/6a1b2703a9ed8737.jpg",
 							"price": 19800,
 							"sku_name_arr": ["红色","256G","公开版"],
-							"stock": 100
+							"stock": 1
 						}
 					],
 					"spec_list": [

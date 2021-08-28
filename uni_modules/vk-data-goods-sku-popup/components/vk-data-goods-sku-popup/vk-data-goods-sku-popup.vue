@@ -987,20 +987,37 @@ export default {
 					urls: [src]
 				});
 			}
-		}
+		},
+		getMaxStock() {
+			let maxStock = 0;
+			let that = this;
+			let { selectShop = {}, goodsInfo = {}, skuListName, stockName } = that;
+			if (selectShop[stockName]) {
+				maxStock = selectShop[stockName];
+			} else {
+				let skuList = goodsInfo[skuListName];
+				if (skuList && skuList.length > 0) {
+					let valueArr = [];
+					skuList.map((skuItem, index) => {
+						valueArr.push(skuItem[stockName]);
+					});
+					let max = Math.max(...valueArr);
+					maxStock = max;
+				}
+			}
+			return maxStock;
+		},
 	},
 	// 计算属性
 	computed: {
 		// 最大购买数量
 		maxBuyNumCom() {
 			let that = this;
+			let maxStock = that.getMaxStock();
 			let max = that.maxBuyNum || 100000;
-			let stockName = that.stockName;
-			if (that.selectShop && typeof that.selectShop[stockName] !== "undefined") {
-				// 最大购买量不能超过当前商品的库存
-				if (max > that.selectShop[stockName]) {
-					max = that.selectShop[stockName];
-				}
+			// 最大购买量不能超过当前商品的库存
+			if (max > maxStock) {
+				max = maxStock;
 			}
 			return max;
 		},

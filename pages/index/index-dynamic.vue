@@ -284,31 +284,31 @@
 			// 参数配置开始 -----------------------------------------------------------
 			goodsChange(e){
 				that.goods_id = e.detail.value;
-				that.skuKey = true;
+				that.openSkuPopup();
 			},
 			showCloseChange(e){
 				that.form.showClose = e.detail.value;
-				that.skuKey = true;
+				that.openSkuPopup();
 			},
 			maskCloseAbleChange(e){
 				that.form.maskCloseAble = e.detail.value;
-				that.skuKey = true;
+				that.openSkuPopup();
 			},
 			skuModeChange(e){
 				that.form.skuMode = e.detail.value;
-				that.skuKey = true;
+				that.openSkuPopup();
 			},
 			themeChange(e){
 				that.form.theme = e.detail.value;
-				that.skuKey = true;
+				that.openSkuPopup();
 			},
 			stepStrictlyChange(e){
 				that.form.stepStrictly = e.detail.value;
-				that.skuKey = true;
+				that.openSkuPopup();
 			},
 			hideStockChange(e){
 				that.form.hideStock = e.detail.value;
-				that.skuKey = true;
+				that.openSkuPopup();
 			},
 			// 参数配置结束 -----------------------------------------------------------
 		}

@@ -20,7 +20,7 @@ exports.main = async (event, context) => {
 					"image": "https://img14.360buyimg.com/n0/jfs/t1/79668/22/9987/159271/5d780915Ebf9bf3f4/6a1b2703a9ed8737.jpg",
 					"price": 19800,
 					"sku_name_arr": ["红色", "128G", "公开版"],
-					"stock": 100
+					"stock": 1000
 				},
 				{
 					"_id": "002",
@@ -38,7 +38,7 @@ exports.main = async (event, context) => {
 					"image": "https://img14.360buyimg.com/n0/jfs/t1/79668/22/9987/159271/5d780915Ebf9bf3f4/6a1b2703a9ed8737.jpg",
 					"price": 19800,
 					"sku_name_arr": ["红色","256G","公开版"],
-					"stock": 100
+					"stock": 1
 				}
 			],
 			"spec_list": [
@@ -92,7 +92,7 @@ exports.main = async (event, context) => {
 		      "image": "https://res.lancome.com.cn/resources/2020/9/11/15998112890781924_920X920.jpg?version=20200917220352530",
 		      "price": 19800,
 		      "sku_name_arr": ["50ml/瓶"],
-		      "stock": 100
+		      "stock": 1000
 		    },
 		    {
 		      "_id": "005",

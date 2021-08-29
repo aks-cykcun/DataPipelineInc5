@@ -1,19 +1,8 @@
 <template>
-	<view
-		class="vk-data-goods-sku-popup"
-		catchtouchmove="true"
-		:class="getValue() && complete ? 'show' : 'none'"
-		@touchmove.stop.prevent="moveHandle"
-		@click.stop="stop"
-	>
+	<view class="vk-data-goods-sku-popup" catchtouchmove="true" :class="valueCom && complete ? 'show' : 'none'" @touchmove.stop.prevent="moveHandle" @click.stop="stop">
 		<!-- 页面内容开始 -->
 		<view class="mask" @click="close('mask')"></view>
-		<view
-			class="layer attr-content"
-			:style="{
-				borderRadius: borderRadius + 'rpx ' + borderRadius + 'rpx 0 0'
-			}"
-		>
+		<view class="layer attr-content" :style="{ borderRadius: borderRadius + 'rpx ' + borderRadius + 'rpx 0 0' }">
 			<view class="specification-wrapper">
 				<scroll-view class="specification-wrapper-content" scroll-y="true">
 					<view class="specification-header">
@@ -21,48 +10,31 @@
 							<image
 								class="product-img"
 								:src="selectShop.image ? selectShop.image : goodsInfo[goodsThumbName]"
-								:style="{
-									backgroundColor: goodsThumbBackgroundColor
-								}"
+								:style="{ backgroundColor: goodsThumbBackgroundColor }"
 								mode="aspectFill"
 								@click="previewImage"
 							></image>
 						</view>
 						<view class="specification-right">
-							<view
-								class="price-content"
-								:style="{
-									color: themeColorFn('priceColor')
-								}"
-							>
+							<view class="price-content" :style="{ color: themeColorFn('priceColor') }">
 								<text class="sign">¥</text>
-								<text class="price" :class="priceCom.length > 16 ? 'price2' : ''">
-									{{ priceCom }}
-								</text>
+								<text class="price" :class="priceCom.length > 16 ? 'price2' : ''">{{ priceCom }}</text>
 							</view>
 							<view class="inventory" v-if="!hideStock">{{ stockText }}：{{ stockCom }}</view>
 							<view class="inventory" v-else></view>
-							<view class="choose" v-show="isManyCom">已选：{{ selectArr.join(" ") }}</view>
+							<view class="choose" v-show="isManyCom">已选：{{ selectArr.join(' ') }}</view>
 						</view>
 					</view>
 
 					<view class="specification-content">
-						<view
-							v-show="isManyCom"
-							class="specification-item"
-							v-for="(item, index1) in goodsInfo[specListName]"
-							:key="index1"
-						>
+						<view v-show="isManyCom" class="specification-item" v-for="(item, index1) in goodsInfo[specListName]" :key="index1">
 							<view class="item-title">{{ item.name }}</view>
 							<view class="item-wrapper">
 								<view
 									class="item-content"
 									v-for="(item_value, index2) in item.list"
 									:key="index2"
-									:class="[
-										item_value.ishow ? '' : 'noactived',
-										subIndex[index1] == index2 ? 'actived' : ''
-									]"
+									:class="[item_value.ishow ? '' : 'noactived', subIndex[index1] == index2 ? 'actived' : '']"
 									:style="[
 										item_value.ishow ? '' : themeColorFn('disableStyle'),
 										item_value.ishow ? themeColorFn('btnStyle') : '',
@@ -89,9 +61,7 @@
 						</view>
 					</view>
 				</scroll-view>
-				<view class="close" @click="close('close')" v-if="showClose != false">
-					<image class="close-item" :src="closeImage"></image>
-				</view>
+				<view class="close" @click="close('close')" v-if="showClose != false"><image class="close-item" :src="closeImage"></image></view>
 			</view>
 
 			<view class="btn-wrapper" v-if="outFoStock || mode == 4">
@@ -101,11 +71,11 @@
 				<view
 					class="sure add-cart"
 					style="border-radius:38rpx 0rpx 0rpx 38rpx;"
-					@click="addCart"
 					:style="{
 						color: themeColorFn('addCartColor'),
 						backgroundColor: themeColorFn('addCartBackgroundColor')
 					}"
+					@click="addCart"
 				>
 					{{ addCartText }}
 				</view>
@@ -113,11 +83,11 @@
 				<view
 					class="sure"
 					style="border-radius:0rpx 38rpx 38rpx 0rpx;"
-					@click="buyNow"
 					:style="{
 						color: themeColorFn('buyNowColor'),
 						backgroundColor: themeColorFn('buyNowBackgroundColor')
 					}"
+					@click="buyNow"
 				>
 					{{ buyNowText }}
 				</view>
@@ -125,11 +95,11 @@
 			<view class="btn-wrapper" v-else-if="mode == 2">
 				<view
 					class="sure add-cart"
-					@click="addCart"
 					:style="{
 						color: themeColorFn('addCartColor'),
 						backgroundColor: themeColorFn('addCartBackgroundColor')
 					}"
+					@click="addCart"
 				>
 					{{ addCartText }}
 				</view>
@@ -137,11 +107,11 @@
 			<view class="btn-wrapper" v-else-if="mode == 3">
 				<view
 					class="sure"
-					@click="buyNow"
 					:style="{
 						color: themeColorFn('buyNowColor'),
 						backgroundColor: themeColorFn('buyNowBackgroundColor')
 					}"
+					@click="buyNow"
 				>
 					{{ buyNowText }}
 				</view>
@@ -155,8 +125,8 @@
 var vk; // vk依赖
 var goodsCache = {}; // 本地商品缓存
 export default {
-	name: "vk-data-goods-sku-popup",
-	emits: ["update:modelValue", "input", "update-goods", "open", "close", "add-cart", "buy-now"],
+	name: 'vk-data-goods-sku-popup',
+	emits: ['update:modelValue', 'input', 'update-goods', 'open', 'close', 'add-cart', 'buy-now'],
 	props: {
 		// true 组件显示 false 组件隐藏
 		value: {
@@ -171,58 +141,58 @@ export default {
 		// 商品id
 		goodsId: {
 			Type: String,
-			default: ""
+			default: ''
 		},
 		// vk路由模式框架下的云函数地址
 		action: {
 			Type: String,
-			default: ""
+			default: ''
 		},
 		// vk云函数路由模式参数结束-----------------------------------------------------------
 		// 该商品已抢完时的按钮文字
 		noStockText: {
 			Type: String,
-			default: "该商品已抢完"
+			default: '该商品已抢完'
 		},
 		// 库存文字
 		stockText: {
 			Type: String,
-			default: "库存"
+			default: '库存'
 		},
 		// 商品表id的字段名
 		goodsIdName: {
 			Type: String,
-			default: "_id"
+			default: '_id'
 		},
 		// sku表id的字段名
 		skuIdName: {
 			Type: String,
-			default: "_id"
+			default: '_id'
 		},
 		// sku_list的字段名
 		skuListName: {
 			Type: String,
-			default: "sku_list"
+			default: 'sku_list'
 		},
 		// spec_list的字段名
 		specListName: {
 			Type: String,
-			default: "spec_list"
+			default: 'spec_list'
 		},
 		// 库存的字段名 默认 stock
 		stockName: {
 			Type: String,
-			default: "stock"
+			default: 'stock'
 		},
 		// sku组合路径的字段名
 		skuArrName: {
 			Type: String,
-			default: "sku_name_arr"
+			default: 'sku_name_arr'
 		},
 		// 默认单规格时的规格组名称
 		defaultSingleSkuName: {
 			Type: String,
-			default: "默认"
+			default: '默认'
 		},
 		// 模式 1:都显示  2:只显示购物车 3:只显示立即购买 4:显示缺货按钮 默认 1
 		mode: {
@@ -242,12 +212,12 @@ export default {
 		// 商品缩略图字段名(未选择sku时)
 		goodsThumbName: {
 			Type: [String],
-			default: "goods_thumb"
+			default: 'goods_thumb'
 		},
 		// 商品缩略图背景颜色，如#999999
 		goodsThumbBackgroundColor: {
 			Type: String,
-			default: "transparent"
+			default: 'transparent'
 		},
 		// 最小购买数量 默认 1
 		minBuyNum: {
@@ -285,7 +255,7 @@ export default {
 		// 立即购买按钮的文字
 		buyNowText: {
 			Type: String,
-			default: "立即购买"
+			default: '立即购买'
 		},
 		// 立即购买按钮的字体颜色
 		buyNowColor: {
@@ -298,7 +268,7 @@ export default {
 		// 加入购物车按钮的文字
 		addCartText: {
 			Type: String,
-			default: "加入购物车"
+			default: '加入购物车'
 		},
 		// 加入购物车按钮的字体颜色
 		addCartColor: {
@@ -332,7 +302,7 @@ export default {
 		closeImage: {
 			Type: String,
 			default:
-				"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAEyUlEQVR42sSZeWwNURTGp4OqtBo7sSXELragdkpQsRRJ1Zr4hyJiJ9YgxNIg1qANiT+E1i5IY0kVVWtQEbuEKLFGUSH27/ANN5PXmTvzupzkl/tm8t6b7517lnvvC0lKSjJ8WmnQAUSDFqABqALKgl8gD7wE90E2SAeXwFf1SxISErQeVtKHwCgwFsSDSIf3hYFKoCkYDBaDdyAViHdueHmoF6FtwDLQ23b/E7gM7oIcejIERIDaoBFoC8qA8mA8SQNz6W1XC9GY+nCQCCYAk/c+gF0gBZwH312+IxR0BCPBUIaH2A+wHsxHCHxx+gLT5QGN6a2JfG8uvVCDws9oiDQYlxkMGfHyQvARlADTwcXk5OT6foV2kS8ATXidymlcyen1a/Jjl9IJh3hPkjELYqO8Cu0KjjNZvtETw5jFBWXPmGSTGQKSeOn5iQ0kVLL0CINfPNcPbDMKyRCbGzEMBJ+ZD8cChYFdqGTqfsWT8otPGoVsEHsMwxDFs3shNsxJ6BrQ0Po8OGUUkVHsNCVml+cntB1jUWwn2GEUsTEMrASbDK+2CCQ0kYX6nfLLisMmKqUr0S60M+jG10vAm+JSCa8+x7CKlzHwaktV6DiObzUzPJIxFO1BQ12wGtTReO9GetVgY/kjNJzZbcWmTjHfxw51AsRqvL8eOAtmsJuFu3g1l+1ZLB5eDTVZ3K0P7tL0TkWOpSg61kVkBtuuNRthGs+wtJST5aQI7cEbkkRXNYVKgX6kIdYuUhYzMQwxN8tiExCLFqHNeSF9/aem0BzGp5PYQCJ7c/Gsk1RfuSD6U1dNpcDf9ZigTmKbMRZ9iVTsHscGJluW2FMf1SSQWGnBmaB6kCJVTVVNJZE++Cx9drEllS1KMCINpURFmEbBWA63Fz9s95cGIdJgp/zXmT4pZcOvSUzuZttTbblmnc3PIjjmidDXvKgdhMh0JdbzuCjWrbNOVovjS5P7bkPJ/mBESkz2BO0166ybNeJ431S2q+01NntuIq3E0amzjiZtk9tssWyTDzO4525bACK9NAUn68TtkNhpEXpOSagRml+S6iLSSeweHv242Qhl13rRyvoDvDlKyTQny/ZQJ+1iH7vVbEx7OR5UiKVIO7VicgvHCtwrudloMIV7/0uadVYW57O4Wvvi8v4pymlKkrpwvsDeLLZAY2pkwbAB3PSQfC+4cH7l4k1ZH8zkZRq8ecO+Z5rN40JJqnXFuGfaxPCTLjcn0OZOpnArXw8HY4paIbw5CcMgXq6HN2/mt6+XGLrN15tBryIUGavMpCTrfKcDCKkAceA9S8nhAOehhSUyhXpkBxxnP4YM1InugP7cBkjBPcqVUWFYCEROxXiQz5JlXV+IfKh7mpfJac+lZ6V87QXVClBkTc7YWsWTPSDyitfzUTlJlj8TbvE6jluDOdwZ+jX57GLO3ADeuyZrDYi86vV81FD2UVGsmT+5Zl0BnkhoseOEaogL46pqO4v/IqUEyalIR4h85BgjHv6+aUWRMbb7EstX6O0cpT1Gco0ry8fWygLDMjmDnQeBt3Qe7uVfkeugDwVLcsVzGsuwLXbV+I63XNAkG5r/hvgRqgqWs6pJPKrsbvz/Q6yyun0w/h6lP+BnzrCpfPMT2L8FGAA7k1GZ/vnaqAAAAABJRU5ErkJggg=="
+				'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAEyUlEQVR42sSZeWwNURTGp4OqtBo7sSXELragdkpQsRRJ1Zr4hyJiJ9YgxNIg1qANiT+E1i5IY0kVVWtQEbuEKLFGUSH27/ANN5PXmTvzupzkl/tm8t6b7517lnvvC0lKSjJ8WmnQAUSDFqABqALKgl8gD7wE90E2SAeXwFf1SxISErQeVtKHwCgwFsSDSIf3hYFKoCkYDBaDdyAViHdueHmoF6FtwDLQ23b/E7gM7oIcejIERIDaoBFoC8qA8mA8SQNz6W1XC9GY+nCQCCYAk/c+gF0gBZwH312+IxR0BCPBUIaH2A+wHsxHCHxx+gLT5QGN6a2JfG8uvVCDws9oiDQYlxkMGfHyQvARlADTwcXk5OT6foV2kS8ATXidymlcyen1a/Jjl9IJh3hPkjELYqO8Cu0KjjNZvtETw5jFBWXPmGSTGQKSeOn5iQ0kVLL0CINfPNcPbDMKyRCbGzEMBJ+ZD8cChYFdqGTqfsWT8otPGoVsEHsMwxDFs3shNsxJ6BrQ0Po8OGUUkVHsNCVml+cntB1jUWwn2GEUsTEMrASbDK+2CCQ0kYX6nfLLisMmKqUr0S60M+jG10vAm+JSCa8+x7CKlzHwaktV6DiObzUzPJIxFO1BQ12wGtTReO9GetVgY/kjNJzZbcWmTjHfxw51AsRqvL8eOAtmsJuFu3g1l+1ZLB5eDTVZ3K0P7tL0TkWOpSg61kVkBtuuNRthGs+wtJST5aQI7cEbkkRXNYVKgX6kIdYuUhYzMQwxN8tiExCLFqHNeSF9/aem0BzGp5PYQCJ7c/Gsk1RfuSD6U1dNpcDf9ZigTmKbMRZ9iVTsHscGJluW2FMf1SSQWGnBmaB6kCJVTVVNJZE++Cx9drEllS1KMCINpURFmEbBWA63Fz9s95cGIdJgp/zXmT4pZcOvSUzuZttTbblmnc3PIjjmidDXvKgdhMh0JdbzuCjWrbNOVovjS5P7bkPJ/mBESkz2BO0166ybNeJ431S2q+01NntuIq3E0amzjiZtk9tssWyTDzO4525bACK9NAUn68TtkNhpEXpOSagRml+S6iLSSeweHv242Qhl13rRyvoDvDlKyTQny/ZQJ+1iH7vVbEx7OR5UiKVIO7VicgvHCtwrudloMIV7/0uadVYW57O4Wvvi8v4pymlKkrpwvsDeLLZAY2pkwbAB3PSQfC+4cH7l4k1ZH8zkZRq8ecO+Z5rN40JJqnXFuGfaxPCTLjcn0OZOpnArXw8HY4paIbw5CcMgXq6HN2/mt6+XGLrN15tBryIUGavMpCTrfKcDCKkAceA9S8nhAOehhSUyhXpkBxxnP4YM1InugP7cBkjBPcqVUWFYCEROxXiQz5JlXV+IfKh7mpfJac+lZ6V87QXVClBkTc7YWsWTPSDyitfzUTlJlj8TbvE6jluDOdwZ+jX57GLO3ADeuyZrDYi86vV81FD2UVGsmT+5Zl0BnkhoseOEaogL46pqO4v/IqUEyalIR4h85BgjHv6+aUWRMbb7EstX6O0cpT1Gco0ry8fWygLDMjmDnQeBt3Qe7uVfkeugDwVLcsVzGsuwLXbV+I63XNAkG5r/hvgRqgqWs6pJPKrsbvz/Q6yyun0w/h6lP+BnzrCpfPMT2L8FGAA7k1GZ/vnaqAAAAABJRU5ErkJggg=='
 		},
 		// 是否隐藏库存显示
 		hideStock: {
@@ -342,12 +312,12 @@ export default {
 		// 颜色主题
 		theme: {
 			Type: String,
-			default: "default"
+			default: 'default'
 		},
 		// 请求中的提示
 		actionTips: {
 			Type: String,
-			default: "请求中..."
+			default: '请求中...'
 		},
 		// 默认选中的SKU
 		defaultSelect: {
@@ -378,7 +348,7 @@ export default {
 		selectedInit: {
 			Type: Boolean,
 			default: false
-		},
+		}
 	},
 	data() {
 		return {
@@ -396,82 +366,82 @@ export default {
 			themeColor: {
 				// 默认主题
 				default: {
-					priceColor: "rgb(254, 86, 10)",
-					buyNowColor: "#ffffff",
-					buyNowBackgroundColor: "rgb(254, 86, 10)",
-					addCartColor: "#ffffff",
-					addCartBackgroundColor: "rgb(255, 148, 2)",
+					priceColor: 'rgb(254, 86, 10)',
+					buyNowColor: '#ffffff',
+					buyNowBackgroundColor: 'rgb(254, 86, 10)',
+					addCartColor: '#ffffff',
+					addCartBackgroundColor: 'rgb(255, 148, 2)',
 					btnStyle: {
-						color: "#333333",
-						borderColor: "#f4f4f4",
-						backgroundColor: "#ffffff"
+						color: '#333333',
+						borderColor: '#f4f4f4',
+						backgroundColor: '#ffffff'
 					},
 					activedStyle: {
-						color: "rgb(254, 86, 10)",
-						borderColor: "rgb(254, 86, 10)",
-						backgroundColor: "rgba(254,86,10,0.1)"
+						color: 'rgb(254, 86, 10)',
+						borderColor: 'rgb(254, 86, 10)',
+						backgroundColor: 'rgba(254,86,10,0.1)'
 					},
 					disableStyle: {
-						color: "#c3c3c3",
-						borderColor: "#f6f6f6",
-						backgroundColor: "#f6f6f6"
+						color: '#c3c3c3',
+						borderColor: '#f6f6f6',
+						backgroundColor: '#f6f6f6'
 					}
 				},
 				// 红黑主题
-				"red-black": {
-					priceColor: "rgb(255, 68, 68)",
-					buyNowColor: "#ffffff",
-					buyNowBackgroundColor: "rgb(255, 68, 68)",
-					addCartColor: "#ffffff",
-					addCartBackgroundColor: "rgb(85, 85, 85)",
+				'red-black': {
+					priceColor: 'rgb(255, 68, 68)',
+					buyNowColor: '#ffffff',
+					buyNowBackgroundColor: 'rgb(255, 68, 68)',
+					addCartColor: '#ffffff',
+					addCartBackgroundColor: 'rgb(85, 85, 85)',
 					activedStyle: {
-						color: "rgb(255, 68, 68)",
-						borderColor: "rgb(255, 68, 68)",
-						backgroundColor: "rgba(255,68,68,0.1)"
+						color: 'rgb(255, 68, 68)',
+						borderColor: 'rgb(255, 68, 68)',
+						backgroundColor: 'rgba(255,68,68,0.1)'
 					}
 				},
 				// 黑白主题
-				"black-white": {
-					priceColor: "rgb(47, 47, 52)",
-					buyNowColor: "#ffffff",
-					buyNowBackgroundColor: "rgb(47, 47, 52)",
-					addCartColor: "rgb(47, 47, 52)",
-					addCartBackgroundColor: "rgb(235, 236, 242)",
+				'black-white': {
+					priceColor: 'rgb(47, 47, 52)',
+					buyNowColor: '#ffffff',
+					buyNowBackgroundColor: 'rgb(47, 47, 52)',
+					addCartColor: 'rgb(47, 47, 52)',
+					addCartBackgroundColor: 'rgb(235, 236, 242)',
 					// btnStyle:{
 					// 	color:"rgb(47, 47, 52)",
 					// 	borderColor:"rgba(235,236,242,0.5)",
 					// 	backgroundColor:"rgba(235,236,242,0.5)",
 					// },
 					activedStyle: {
-						color: "rgb(47, 47, 52)",
-						borderColor: "rgba(47,47,52,0.12)",
-						backgroundColor: "rgba(47,47,52,0.12)"
+						color: 'rgb(47, 47, 52)',
+						borderColor: 'rgba(47,47,52,0.12)',
+						backgroundColor: 'rgba(47,47,52,0.12)'
 					}
 				},
 				// 咖啡色主题
 				coffee: {
-					priceColor: "rgb(195, 167, 105)",
-					buyNowColor: "#ffffff",
-					buyNowBackgroundColor: "rgb(195, 167, 105)",
-					addCartColor: "rgb(195, 167, 105)",
-					addCartBackgroundColor: "rgb(243, 238, 225)",
+					priceColor: 'rgb(195, 167, 105)',
+					buyNowColor: '#ffffff',
+					buyNowBackgroundColor: 'rgb(195, 167, 105)',
+					addCartColor: 'rgb(195, 167, 105)',
+					addCartBackgroundColor: 'rgb(243, 238, 225)',
 					activedStyle: {
-						color: "rgb(195, 167, 105)",
-						borderColor: "rgb(195, 167, 105)",
-						backgroundColor: "rgba(195, 167, 105,0.1)"
+						color: 'rgb(195, 167, 105)',
+						borderColor: 'rgb(195, 167, 105)',
+						backgroundColor: 'rgba(195, 167, 105,0.1)'
 					}
 				},
 				// 浅绿色主题
 				green: {
-					priceColor: "rgb(99, 190, 114)",
-					buyNowColor: "#ffffff",
-					buyNowBackgroundColor: "rgb(99, 190, 114)",
-					addCartColor: "rgb(99, 190, 114)",
-					addCartBackgroundColor: "rgb(225, 244, 227)",
+					priceColor: 'rgb(99, 190, 114)',
+					buyNowColor: '#ffffff',
+					buyNowBackgroundColor: 'rgb(99, 190, 114)',
+					addCartColor: 'rgb(99, 190, 114)',
+					addCartBackgroundColor: 'rgb(225, 244, 227)',
 					activedStyle: {
-						color: "rgb(99, 190, 114)",
-						borderColor: "rgb(99, 190, 114)",
-						backgroundColor: "rgba(99, 190, 114,0.1)"
+						color: 'rgb(99, 190, 114)',
+						borderColor: 'rgb(99, 190, 114)',
+						backgroundColor: 'rgba(99, 190, 114,0.1)'
 					}
 				}
 			}
@@ -480,7 +450,7 @@ export default {
 	created() {
 		let that = this;
 		vk = that.vk;
-		if (that.getValue()) {
+		if (that.valueCom) {
 			that.open();
 		}
 	},
@@ -498,35 +468,26 @@ export default {
 			that.shopItemInfo = {};
 			let specListName = that.specListName;
 			that.goodsInfo[specListName].map(item => {
-				that.selectArr.push("");
+				that.selectArr.push('');
 				that.subIndex.push(-1);
 			});
 			that.checkItem(); // 计算sku里面规格形成路径
 			that.checkInpath(-1); // 传-1是为了不跳过循环
 			if (!notAutoClick) that.autoClickSku(); // 自动选择sku策略
 		},
-		getValue(){
-			// #ifndef VUE3
-			return this.value;
-			// #endif
-
-			// #ifdef VUE3
-			return this.modelValue;
-			// #endif
-		},
 		// 使用vk路由模式框架获取商品信息
 		findGoodsInfo(obj = {}) {
 			let that = this;
 			let { useCache } = obj;
-			if (typeof vk == "undefined") {
-				that.toast("custom-action必须是function", "none");
+			if (typeof vk == 'undefined') {
+				that.toast('custom-action必须是function', 'none');
 				return false;
 			}
 			let { actionTips } = that;
-			let actionTitle = "";
+			let actionTitle = '';
 			let actionAoading = false;
-			if (actionTips !== "custom") {
-				actionTitle = useCache ? "" : "请求中...";
+			if (actionTips !== 'custom') {
+				actionTitle = useCache ? '' : '请求中...';
 			} else {
 				actionAoading = useCache ? false : true;
 			}
@@ -541,7 +502,7 @@ export default {
 					that.updateGoodsInfo(data.goodsInfo);
 					// 更新缓存
 					goodsCache[that.goodsId] = data.goodsInfo;
-					that.$emit("update-goods", data.goodsInfo);
+					that.$emit('update-goods', data.goodsInfo);
 				},
 				fail() {
 					that.updateValue(false);
@@ -551,13 +512,13 @@ export default {
 		updateValue(value) {
 			let that = this;
 			if (value) {
-				that.$emit("open", true);
-				that.$emit("input", true);
-				that.$emit("update:modelValue", true);
+				that.$emit('open', true);
+				that.$emit('input', true);
+				that.$emit('update:modelValue', true);
 			} else {
-				that.$emit("input", false);
-				that.$emit("close", "close");
-				that.$emit("update:modelValue", false);
+				that.$emit('input', false);
+				that.$emit('close', 'close');
+				that.$emit('update:modelValue', false);
 			}
 		},
 		// 更新商品信息(库存、名称、图片)
@@ -567,10 +528,7 @@ export default {
 			// 	item.sku_name_arr = ["20ml/瓶"];
 			// });
 			let { skuListName } = that;
-			if (
-				JSON.stringify(that.goodsInfo) === "{}" ||
-				that.goodsInfo[that.goodsIdName] !== goodsInfo[that.goodsIdName]
-			) {
+			if (JSON.stringify(that.goodsInfo) === '{}' || that.goodsInfo[that.goodsIdName] !== goodsInfo[that.goodsIdName]) {
 				that.goodsInfo = goodsInfo;
 				that.initKey = true;
 			} else {
@@ -581,11 +539,7 @@ export default {
 				that.init();
 			}
 			// 更新选中sku的库存信息
-			let select_sku_info = that.getListItem(
-				that.goodsInfo[skuListName],
-				that.skuIdName,
-				that.selectShop[that.skuIdName]
-			);
+			let select_sku_info = that.getListItem(that.goodsInfo[skuListName], that.skuIdName, that.selectShop[that.skuIdName]);
 			Object.assign(that.selectShop, select_sku_info);
 			that.defaultSelectSku();
 			that.complete = true;
@@ -604,7 +558,7 @@ export default {
 			} else {
 				that.complete = false;
 			}
-			if (that.customAction && typeof that.customAction === "function") {
+			if (that.customAction && typeof that.customAction === 'function') {
 				try {
 					goodsInfo = await that
 						.customAction({
@@ -623,9 +577,9 @@ export default {
 							}, 500);
 						});
 				} catch (err) {
-					let { message = "" } = err;
-					if (message.indexOf(".catch is not a function") > -1) {
-						that.toast("custom-action必须返回一个Promise", "none");
+					let { message = '' } = err;
+					if (message.indexOf('.catch is not a function') > -1) {
+						that.toast('custom-action必须返回一个Promise', 'none');
 						setTimeout(function() {
 							that.close();
 						}, 500);
@@ -634,24 +588,24 @@ export default {
 				}
 				// 更新缓存
 				goodsCache[that.goodsId] = goodsInfo;
-				if (goodsInfo && typeof goodsInfo == "object" && JSON.stringify(goodsInfo) != "{}") {
+				if (goodsInfo && typeof goodsInfo == 'object' && JSON.stringify(goodsInfo) != '{}') {
 					findGoodsInfoRun = false;
 					that.updateGoodsInfo(goodsInfo);
 					that.updateValue(true);
 				} else {
-					that.toast("未获取到商品信息", "none");
-					that.$emit("input", false);
+					that.toast('未获取到商品信息', 'none');
+					that.$emit('input', false);
 					return false;
 				}
-			} else if (typeof that.localdata !== "undefined" && that.localdata !== null) {
+			} else if (typeof that.localdata !== 'undefined' && that.localdata !== null) {
 				goodsInfo = that.localdata;
-				if (goodsInfo && typeof goodsInfo == "object" && JSON.stringify(goodsInfo) != "{}") {
+				if (goodsInfo && typeof goodsInfo == 'object' && JSON.stringify(goodsInfo) != '{}') {
 					findGoodsInfoRun = false;
 					that.updateGoodsInfo(goodsInfo);
 					that.updateValue(true);
 				} else {
-					that.toast("未获取到商品信息", "none");
-					that.$emit("input", false);
+					that.toast('未获取到商品信息', 'none');
+					that.$emit('input', false);
 					return false;
 				}
 			} else {
@@ -664,16 +618,16 @@ export default {
 			if (new Date().getTime() - that.openTime < 400) {
 				return false;
 			}
-			if (s == "mask") {
+			if (s == 'mask') {
 				if (that.maskCloseAble !== false) {
-					that.$emit("input", false);
-					that.$emit("close", "mask");
-					that.$emit("update:modelValue", false);
+					that.$emit('input', false);
+					that.$emit('close', 'mask');
+					that.$emit('update:modelValue', false);
 				}
 			} else {
-				that.$emit("input", false);
-				that.$emit("close", "close");
-				that.$emit("update:modelValue", false);
+				that.$emit('input', false);
+				that.$emit('close', 'close');
+				that.$emit('update:modelValue', false);
 			}
 		},
 		moveHandle() {
@@ -687,7 +641,7 @@ export default {
 					that.$set(that.selectArr, index1, value.name);
 					that.$set(that.subIndex, index1, index2);
 				} else {
-					that.$set(that.selectArr, index1, "");
+					that.$set(that.selectArr, index1, '');
 					that.$set(that.subIndex, index1, -1);
 				}
 				that.checkInpath(index1);
@@ -699,10 +653,10 @@ export default {
 		checkSelectShop() {
 			let that = this;
 			// 如果全部选完
-			if (that.selectArr.every(item => item != "")) {
+			if (that.selectArr.every(item => item != '')) {
 				that.selectShop = that.shopItemInfo[that.getArrayToSting(that.selectArr)];
 				let stock = that.selectShop[that.stockName];
-				if (typeof stock !== "undefined" && that.selectNum > stock) {
+				if (typeof stock !== 'undefined' && that.selectNum > stock) {
 					that.selectNum = stock;
 				}
 				if (that.selectNum > that.maxBuyNum) {
@@ -711,7 +665,7 @@ export default {
 				if (that.selectNum < that.minBuyNum) {
 					that.selectNum = that.minBuyNum;
 				}
-				if (that.selectedInit){
+				if (that.selectedInit) {
 					that.selectNum = that.minBuyNum || 1;
 				}
 			} else {
@@ -737,9 +691,7 @@ export default {
 					}
 					let choosed_copy = [...that.selectArr];
 					that.$set(choosed_copy, i, specList[i].list[j].name);
-					let choosed_copy2 = choosed_copy.filter(
-						item => item !== "" && typeof item !== "undefined"
-					);
+					let choosed_copy2 = choosed_copy.filter(item => item !== '' && typeof item !== 'undefined');
 					if (that.shopItemInfo.hasOwnProperty(that.getArrayToSting(choosed_copy2))) {
 						specList[i].list[j].ishow = true;
 					} else {
@@ -795,13 +747,13 @@ export default {
 			// console.timeEnd('计算有多小种可选路径需要的时间是');
 		},
 		getArrayToSting(arr) {
-			let str = "";
+			let str = '';
 			arr.map((item, index) => {
-				item = item.replace(/\./g, "。");
+				item = item.replace(/\./g, '。');
 				if (index == 0) {
 					str += item;
 				} else {
-					str += "," + item;
+					str += ',' + item;
 				}
 			});
 			return str;
@@ -816,19 +768,19 @@ export default {
 			that.clickTime = clickTime;
 			let { selectShop, selectNum, stockText, stockName } = that;
 			if (!selectShop || !selectShop[that.skuIdName]) {
-				that.toast("请先选择对应规格", "none");
+				that.toast('请先选择对应规格', 'none');
 				return false;
 			}
 			if (selectNum <= 0) {
-				that.toast("购买数量必须>0", "none");
+				that.toast('购买数量必须>0', 'none');
 				return false;
 			}
 			// 判断库存
 			if (selectNum > selectShop[stockName]) {
-				that.toast(stockText + "不足", "none");
+				that.toast(stockText + '不足', 'none');
 				return false;
 			}
-			if (typeof obj.success == "function") obj.success(selectShop);
+			if (typeof obj.success == 'function') obj.success(selectShop);
 		},
 		// 加入购物车
 		addCart() {
@@ -836,7 +788,7 @@ export default {
 			that.checkSelectComplete({
 				success: function(selectShop) {
 					selectShop.buy_num = that.selectNum;
-					that.$emit("add-cart", selectShop);
+					that.$emit('add-cart', selectShop);
 					// setTimeout(function() {
 					// 	that.init();
 					// }, 300);
@@ -849,7 +801,7 @@ export default {
 			that.checkSelectComplete({
 				success: function(selectShop) {
 					selectShop.buy_num = that.selectNum;
-					that.$emit("buy-now", selectShop);
+					that.$emit('buy-now', selectShop);
 				}
 			});
 		},
@@ -865,7 +817,7 @@ export default {
 			let that = this;
 			let item;
 			for (let i in list) {
-				if (typeof value == "object") {
+				if (typeof value == 'object') {
 					if (JSON.stringify(list[i][key]) === JSON.stringify(value)) {
 						item = list[i];
 						break;
@@ -939,7 +891,7 @@ export default {
 					let skuName = skuArr[index];
 					let specList = specListArr[index].list;
 					let index1 = index;
-					let index2 = that.getListIndex(specList, "name", skuName);
+					let index2 = that.getListIndex(specList, 'name', skuName);
 					if (index2 == -1) {
 						clickKey = false;
 						break;
@@ -961,12 +913,12 @@ export default {
 		},
 		priceFilter(n = 0) {
 			let that = this;
-			if (typeof n == "string") {
+			if (typeof n == 'string') {
 				n = parseFloat(n);
 			}
-			if (that.amountType === 0){
+			if (that.amountType === 0) {
 				return n.toFixed(2);
-			}else {
+			} else {
 				return (n / 100).toFixed(2);
 			}
 		},
@@ -1006,10 +958,19 @@ export default {
 				}
 			}
 			return maxStock;
-		},
+		}
 	},
 	// 计算属性
 	computed: {
+		valueCom() {
+			// #ifndef VUE3
+			return this.value;
+			// #endif
+
+			// #ifdef VUE3
+			return this.modelValue;
+			// #endif
+		},
 		// 最大购买数量
 		maxBuyNumCom() {
 			let that = this;
@@ -1038,7 +999,7 @@ export default {
 		},
 		// 默认价格区间计算
 		priceCom() {
-			let str = "";
+			let str = '';
 			let that = this;
 			let { selectShop = {}, goodsInfo = {}, skuListName, skuIdName } = that;
 			if (selectShop[skuIdName]) {
@@ -1053,7 +1014,7 @@ export default {
 					let min = that.priceFilter(Math.min(...valueArr));
 					let max = that.priceFilter(Math.max(...valueArr));
 					if (min === max) {
-						str = min + "";
+						str = min + '';
 					} else {
 						str = `${min} - ${max}`;
 					}
@@ -1063,7 +1024,7 @@ export default {
 		},
 		// 库存显示
 		stockCom() {
-			let str = "";
+			let str = '';
 			let that = this;
 			let { selectShop = {}, goodsInfo = {}, skuListName, stockName } = that;
 			if (selectShop[stockName]) {
@@ -1085,16 +1046,10 @@ export default {
 				}
 			}
 			return str;
-		},
+		}
 	},
 	watch: {
-		value(newVal, oldValue) {
-			let that = this;
-			if (newVal) {
-				that.open();
-			}
-		},
-		modelValue(newVal, oldValue) {
+		valueCom(newVal, oldValue) {
 			let that = this;
 			if (newVal) {
 				that.open();
@@ -1105,12 +1060,7 @@ export default {
 			handler: function(newVal, oldValue) {
 				let that = this;
 				let { goodsIdName } = that;
-				if (
-					typeof newVal === "object" &&
-					newVal &&
-					newVal[goodsIdName] &&
-					!goodsCache[newVal[goodsIdName]]
-				) {
+				if (typeof newVal === 'object' && newVal && newVal[goodsIdName] && !goodsCache[newVal[goodsIdName]]) {
 					that.pushGoodsCache(newVal);
 				}
 			}
@@ -1138,7 +1088,7 @@ export default {
 
 		.layer {
 			animation: showLayer 0.2s linear both;
-			bottom:var(--window-bottom);
+			bottom: var(--window-bottom);
 		}
 	}
 

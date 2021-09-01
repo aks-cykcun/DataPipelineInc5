@@ -94,7 +94,7 @@
 				return new Promise(function (resolve, reject) {
 					// 此处写接口请求，并将返回的数据进行处理成goodsInfo的数据格式，
 					// 并执行resolve(goodsInfo);
-					// goodsInfo是后端返回的数据
+					// goodsInfo是后端返回的数据（此处的数据结构和属性名sss必须与下方完全一致）
 					let goodsInfo = {
 						"_id":"002",
 						"name": "迪奥香水",

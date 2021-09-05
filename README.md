@@ -28,7 +28,7 @@ datacom，全称是data components，数据驱动的组件。
 ```
 
 ### 体验地址
-![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-vk-cloud-router-test/23023100-ffae-11ea-b997-9918a5dda011.png)
+![](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-cf0c5e69-620c-4f3c-84ab-f4619262939f/f1a5ba34-b536-41f0-8894-bef78ae0718e.png)
 
 ### 插件示例版运行步骤
 

@@ -78,7 +78,8 @@
     "vueVersion" : "2",
     "h5" : {
         "router" : {
-            "base" : ""
+            "base" : "/sku-popup/",
+            "mode" : "hash"
         }
     }
 }

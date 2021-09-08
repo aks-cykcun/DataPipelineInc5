@@ -246,6 +246,7 @@ openSkuPopup(){
 | hide-stock（v1.1）     | 是否隐藏库存的显示                             | Boolean      | false           | true、false          |
 | theme（v1.1.1）        | 主题风格                             | String      | default     | default、red-black、black-white、coffee、green  |
 | localdata（v1.3.0）    | 商品信息本地数据源                | Object      | -     | - |
+| safe-area-inset-bottom（v1.6.1）    | 是否开启底部安全区适配            | Boolean      | true     | true、false  |
 | amount-type            | 默认金额会除以100（即100=1元），若设置为0，则不会除以100（即1=1元）   | Number  | 1    | 0             |
 | custom-action          | 自定义获取商品信息的函数（已知支付宝不支持，支付宝请改用localdata属性）                              | Function        | null        | -          |
 | show-close             | 是否显示右上角关闭按钮                                | Boolean | true | true、false |
@@ -276,8 +277,8 @@ openSkuPopup(){
 |----------|------------------------|------|
 | open     | 打开组件时                  |      |
 | close    | 关闭组件时                             |      |
-| add-cart | 点击添加到购物车时（需选择完SKU才会触发） |   selectShop：当前选择的sku数据    |
-| buy-now  | 点击立即购买时（需选择完SKU才会触发） |    selectShop：当前选择的sku数据    |
+| cart | 点击添加到购物车时（需选择完SKU才会触发） |   selectShop：当前选择的sku数据    |
+| buy | 点击立即购买时（需选择完SKU才会触发） |    selectShop：当前选择的sku数据    |
 
 ## 重要说明
 ### `skuArrName（sku_name_arr）`和`specListName（spec_list）`对应顺序

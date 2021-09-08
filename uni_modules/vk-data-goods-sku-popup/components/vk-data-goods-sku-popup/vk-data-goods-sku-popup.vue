@@ -2,7 +2,7 @@
 	<view class="vk-data-goods-sku-popup" catchtouchmove="true" :class="valueCom && complete ? 'show' : 'none'" @touchmove.stop.prevent="moveHandle" @click.stop="stop">
 		<!-- 页面内容开始 -->
 		<view class="mask" @click="close('mask')"></view>
-		<view class="layer attr-content" :style="{ borderRadius: borderRadius + 'rpx ' + borderRadius + 'rpx 0 0' }">
+		<view class="layer attr-content" :class="{'safe-area-inset-bottom':safeAreaInsetBottom }" :style="{ borderRadius: borderRadius + 'rpx ' + borderRadius + 'rpx 0 0' }">
 			<view class="specification-wrapper">
 				<scroll-view class="specification-wrapper-content" scroll-y="true">
 					<view class="specification-header">
@@ -348,7 +348,12 @@ export default {
 		selectedInit: {
 			Type: Boolean,
 			default: false
-		}
+		},
+		// 是否开启底部安全区适配，默认true
+		safeAreaInsetBottom: {
+			Type: Boolean,
+			default: true
+		},
 	},
 	data() {
 		return {
@@ -1273,7 +1278,6 @@ export default {
 			justify-content: space-between;
 			padding: 0 26rpx;
 			box-sizing: border-box;
-
 			.layer-btn {
 				width: 335rpx;
 				height: 76rpx;
@@ -1306,6 +1310,11 @@ export default {
 			.sure.add-cart {
 				background: #ff9402;
 			}
+		}
+		.btn-wrapper.safe-area-inset-bottom{
+			padding-bottom: 0;
+			padding-bottom: constant(safe-area-inset-bottom);
+			padding-bottom: env(safe-area-inset-bottom);
 		}
 	}
 

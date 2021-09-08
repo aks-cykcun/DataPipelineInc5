@@ -126,7 +126,7 @@ var vk; // vk依赖
 var goodsCache = {}; // 本地商品缓存
 export default {
 	name: 'vk-data-goods-sku-popup',
-	emits: ['update:modelValue', 'input', 'update-goods', 'open', 'close', 'add-cart', 'buy-now'],
+	emits: ['update:modelValue', 'input', 'update-goods', 'open', 'close', 'add-cart', 'buy-now','cart','buy'],
 	props: {
 		// true 组件显示 false 组件隐藏
 		value: {
@@ -789,6 +789,7 @@ export default {
 				success: function(selectShop) {
 					selectShop.buy_num = that.selectNum;
 					that.$emit('add-cart', selectShop);
+					that.$emit('cart', selectShop);
 					// setTimeout(function() {
 					// 	that.init();
 					// }, 300);
@@ -802,6 +803,7 @@ export default {
 				success: function(selectShop) {
 					selectShop.buy_num = that.selectNum;
 					that.$emit('buy-now', selectShop);
+					that.$emit('buy', selectShop);
 				}
 			});
 		},
